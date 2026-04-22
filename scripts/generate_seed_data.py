@@ -194,7 +194,7 @@ def generate_foi_requests(count: int, tenant_property_map: dict[int, int]) -> No
         tenant_id = random.choice(tenant_ids)
         property_id = tenant_property_map[tenant_id]
 
-        request_reference = f"FOI-2026-{i:04d}"
+        request_reference = f"FOI-2026-{1000 + i:04d}"
         request_date = random_date(date(2026, 1, 1), date(2026, 4, 1))
         due_date = request_date + timedelta(days=30)
         request_type = random.choice(FOI_REQUEST_TYPES)
