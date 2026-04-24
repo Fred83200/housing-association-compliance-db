@@ -1,10 +1,20 @@
 # Housing Association Compliance Demo DB
 
+>All data is synthetic and intended for demo, prototype, and bid-support purposes only
+
+---
+
 ## Overview
 
-This repository contains a PostgreSQL demo db designed to support the structured-data side of the housing association compliance bid solution. The goal is to provide realistic synthetic data for testing AI-powered discovery across structured and unstructured sources.
+A PostgreSQL demo database designed to support the structured data side of a housing association compliance bid solution. It provides realistic synthetic data for testing AI-powered discovery across structured and unstructured sources.
 
-This database models:
+This project has evolved beyond a simple database — it now includes a **full discovery layer simulating Azure AI Foundry**, comprising a PostgreSQL database, optimised queries, a FastAPI layer, a natural language query router, and a lightweight chat UI.
+
+> This setup mirrors how an AI-powered discovery system would behave **without requiring Azure or paid services**.
+
+---
+
+## What This Models
 
 - Properties
 - Tenants
@@ -12,21 +22,7 @@ This database models:
 - Repair records
 - FOI requests
 
-> **Note:** This database is intended to be used alongside SharePoint-based unstructured data for the AI Foundry discovery use case.
-
----
-
-## Purpose
-
-This repo provides a small but realistic structured dataset that can be queried and explored as part of a housing association compliance / tenant information request use case. All data is synthetic and intended for **demo, prototype, and bid-support purposes only**.
-
-The main idea is to simulate a scenario where a housing association needs to retrieve information linked to:
-
-- A property
-- A tenant
-- Maintenance or repair history
-- Contractor involvement
-- FOI or tenant information requests
+This database is intended to be used alongside SharePoint-based unstructured data for the AI Foundry discovery use case.
 
 ---
 
@@ -38,46 +34,26 @@ housing-association-compliance-db/
 ├── README.md
 ├── requirements.txt
 ├── sql/
+│   ├── 000_drop_tables.sql
 │   ├── 001_create_tables.sql
 │   ├── 002_seed_data.sql
-│   └── 003_sample_queries.sql
+│   ├── 003_sample_queries.sql
+│   ├── 004_generated_seed.sql
+│   ├── 005_create_indexes.sql
+│   ├── 006_create_views.sql
+│   └── 007_create_readonly_user.sql
 ├── scripts/
 │   └── generate_seed_data.py
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   ├── discovery_service.py
+│   ├── query_router.py
+│   └── static/
+│       └── index.html
 └── docs/
     └── data_model.md
 ```
-
----
-
-## File Reference
-
-### Root Files
-
-| File | Description |
-|------|-------------|
-| `README.md` | Main documentation for setup and usage |
-| `requirements.txt` | Python dependencies for the synthetic data generator |
-| `.gitignore` | Prevents unnecessary files (e.g. `.venv`, IDE configs) from being committed |
-
-### SQL Files
-
-| File | Description |
-|------|-------------|
-| `sql/001_create_tables.sql` | Creates all database tables and relationships |
-| `sql/002_seed_data.sql` | Inserts the base dataset into the database |
-| `sql/003_sample_queries.sql` | Contains example queries to explore and validate the dataset |
-
-### Scripts
-
-**`scripts/generate_seed_data.py`** — Generates synthetic SQL `INSERT` statements.
-
-- Does not connect to PostgreSQL directly
-- Prints SQL output to the terminal
-- Can be used to generate larger datasets
-
-### Documentation
-
-**`docs/data_model.md`** — Detailed description of entities and relationships.
 
 ---
 
@@ -85,27 +61,29 @@ housing-association-compliance-db/
 
 ### Tables
 
-- `properties`
-- `tenants`
-- `contractors`
-- `repair_records`
-- `foi_requests`
+| Table | Description |
+|---|---|
+| `properties` | Housing association properties |
+| `tenants` | Tenants linked to properties |
+| `contractors` | Contractors involved in repairs |
+| `repair_records` | Maintenance and repair history |
+| `foi_requests` | Freedom of Information requests |
 
 ### Relationships
 
-| Relationship                    | Type |
-|---------------------------------|---|
-| One property > tenants          | One-to-many |
-| One property > repair records   | One-to-many |
-| One contractor > repair records | One-to-many |
-| One tenant > FOI requests       | One-to-many |
-| One property > FOI requests     | One-to-many |
+| Relationship | Type |
+|---|---|
+| One property → tenants | One-to-many |
+| One property → repair records | One-to-many |
+| One contractor → repairs | One-to-many |
+| One tenant → FOI requests | One-to-many |
+| One property → FOI requests | One-to-many |
 
 ---
 
 ## Prerequisites
 
-Ensure the following are installed before proceeding:
+Ensure the following are installed before setup:
 
 - Python 3
 - PostgreSQL
@@ -114,93 +92,157 @@ Ensure the following are installed before proceeding:
 
 ---
 
-## Setup Instructions
+## Setup
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
-git clone <the-repo-ssh>
+git clone <your-repo-ssh>
 cd housing-association-compliance-db
 ```
 
-### 2. Create a Python Virtual Environment
+### 2. Create Python environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Creates an isolated Python environment to avoid conflicts with global packages. Your terminal prompt will show `(.venv)` when active.
+> The terminal prompt should now show `(.venv)`
 
-### 3. Install Dependencies
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Installs required libraries (e.g. `Faker`). All packages should install with no errors.
-
-### 4. Create the PostgreSQL Database
+### 4. Create the database
 
 ```bash
 psql postgres
-CREATE DATABASE housing_demo;
+CREATE DATABASE housing_compliance_demo;
 \q
 ```
 
-Opens the PostgreSQL CLI and creates a new database. You should see a `CREATE DATABASE` confirmation.
-
-### 5. Create Tables
+### 5. Run database setup (in order)
 
 ```bash
-psql -d housing_demo -f sql/001_create_tables.sql
+psql -d housing_compliance_demo -f sql/000_drop_tables.sql
+psql -d housing_compliance_demo -f sql/001_create_tables.sql
+psql -d housing_compliance_demo -f sql/004_generated_seed.sql
+psql -d housing_compliance_demo -f sql/005_create_indexes.sql
+psql -d housing_compliance_demo -f sql/006_create_views.sql
 ```
 
-Creates all tables. Expected output: multiple `CREATE TABLE` confirmations.
-
-### 6. Load Seed Data
+**Alternative — base dataset only:**
 
 ```bash
-psql -d housing_demo -f sql/002_seed_data.sql
+psql -d housing_compliance_demo -f sql/002_seed_data.sql
 ```
 
-Inserts the initial dataset. Expected output: multiple `INSERT` confirmations.
-
-### 7. Run Sample Queries
+### 6. Validate data loaded
 
 ```bash
-psql -d housing_demo -f sql/003_sample_queries.sql
+psql -d housing_compliance_demo -c "SELECT COUNT(*) FROM properties;"
+psql -d housing_compliance_demo -c "SELECT COUNT(*) FROM tenants;"
+psql -d housing_compliance_demo -c "SELECT COUNT(*) FROM repair_records;"
+psql -d housing_compliance_demo -c "SELECT COUNT(*) FROM foi_requests;"
 ```
 
-Runs validation queries and prints tables of data to the terminal.
+> All counts should be non zero
 
 ---
 
-## Using the Synthetic Data Generator
+## Synthetic Data Generator
 
-### Run the Script
-
-```bash
-python3 scripts/generate_seed_data.py
-```
-
-Generates SQL `INSERT` statements and displays them in the terminal.
-
-### Save Output to a File
+### Generate a new dataset
 
 ```bash
 python3 scripts/generate_seed_data.py > sql/004_generated_seed.sql
 ```
 
-### Load Generated Data into PostgreSQL
+### Reload the database with new data
 
 ```bash
-psql -d housing_demo -f sql/004_generated_seed.sql
+psql -d housing_compliance_demo -f sql/000_drop_tables.sql
+psql -d housing_compliance_demo -f sql/001_create_tables.sql
+psql -d housing_compliance_demo -f sql/004_generated_seed.sql
 ```
 
 ---
 
-## Example Query
+## Database Optimisation
+
+### Indexes — `005_create_indexes.sql`
+
+Improves query performance for:
+
+- Compliance filtering
+- City search
+- FOI lookups
+- Inspection queries
+
+### Views — `006_create_views.sql`
+
+Precomputed datasets used by the API for fast responses:
+
+| View | Description |
+|---|---|
+| `vw_non_compliant_properties` | Properties failing compliance checks |
+| `vw_overdue_inspections` | Properties with overdue inspections |
+| `vw_overdue_foi_requests` | FOI requests past their response deadline |
+
+### Read-only user — `007_create_readonly_user.sql`
+
+Creates a restricted database user to simulate production level access control
+
+---
+
+## Discovery API (Simulated Azure AI Foundry)
+
+### Start the API
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### Access points
+
+| Interface | URL |
+|---|---|
+| Chat UI | http://127.0.0.1:8000 |
+| Swagger / API docs | http://127.0.0.1:8000/docs |
+
+### How it works
+
+1. User submits a question via the chat UI
+2. API receives it at `/chat`
+3. `query_router.py` detects the intent
+4. `discovery_service.py` executes the appropriate SQL
+5. Results are returned as JSON
+6. UI renders the response
+
+### Supported query types
+
+**Compliance**
+- Show me compliant properties
+- Show me non-compliant properties
+
+**Inspections**
+- Show me overdue inspections
+- Show me properties inspected after 2025-07-01
+
+**FOI**
+- Show me overdue FOI requests
+
+**Location**
+- Show me properties in London
+
+**Lookup**
+- Find property SW1A 1AA
+- Find UPRN UPRNX00001
+
+### Example SQL query
 
 ```sql
 SELECT p.address_line_1, t.first_name, t.last_name
@@ -210,18 +252,36 @@ JOIN tenants t ON p.property_id = t.property_id;
 
 ---
 
-## What You Should Be Able to Do
+## Design Principles
 
-After completing setup, you should be able to:
+| Principle | Detail                                       |
+|---|----------------------------------------------|
+| No external AI dependency | Cost free, runs locally                      |
+| Controlled SQL execution | No arbitrary query injection                 |
+| Precomputed views | Fast predictable responses                   |
+| Indexed queries | No full table scans                          |
+| Clean separation of concerns | DB = storage · API = logic · UI = interaction |
 
-- Query properties and tenants
-- View repair history per property
-- Link contractors to repairs
-- Retrieve FOI requests linked to tenants and properties
+### Expected performance
+
+- API responds in 1-3 seconds
+- Queries return structured results
+- Chat UI displays data immediately
+
+---
+
+## Future Improvements
+
+- [ ] Integrate a real LLM (Azure OpenAI or OpenAI API)
+- [ ] Add document retrieval via SharePoint / RAG pipeline
+- [ ] Add a caching layer
+- [ ] Expand natural language query understanding
+- [ ] Build dashboards for common compliance queries
 
 ---
 
 ## Notes
 
-- All data is **synthetic** — no real personal data is used
-- Designed for **demos, testing, and prototyping only**
+- All data is entirely synthetic
+- No real personal data is used at any point
+- This project is designed for **demo, testing, and prototyping only**
