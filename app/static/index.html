@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Housing Compliance Discovery</title>
+</head>
+<body>
+  <h1>Housing Compliance Discovery Assistant</h1>
+
+  <input id="question" style="width: 500px;" placeholder="Ask a question..." />
+  <button onclick="askQuestion()">Ask</button>
+
+  <pre id="response"></pre>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById("question").value;
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question })
+      });
+
+      const data = await response.json();
+      document.getElementById("response").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
