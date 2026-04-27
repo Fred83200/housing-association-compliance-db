@@ -1,3 +1,6 @@
+import json
+
+from app.llm_client import generate_response
 from app.discovery_service import (
     find_property,
     get_compliant_properties,
@@ -49,8 +52,61 @@ def _extract_property_id(normalized_question: str) -> int | None:
     return None
 
 
+def classify_query_ai(user_query: str) -> dict:
+    prompt = prompt = f"""
+You are an AI assistant for housing association FOI queries.
+
+Your job is to classify the user's request into ONE of the following intents:
+
+- non_compliant (properties not meeting compliance standards, unsafe, poor condition, failed inspections, bad condition)
+- compliant (properties meeting standards)
+- overdue_inspections (late or overdue inspections)
+- inspected_after (properties inspected after a certain date)
+- properties_by_city (properties in a specific location)
+- overdue_foi (late FOI requests)
+- property_case_file (full details for a specific property)
+- document_search (reports, documents, notes)
+- find_property (lookup by postcode, UPRN, or identifier)
+- unknown
+
+IMPORTANT:
+- Map natural language to the closest intent
+- "bad condition", "unsafe", "failing", "not up to standard" → non_compliant
+- "late", "behind", "overdue" → overdue_inspections or overdue_foi
+- Be flexible in interpretation
+
+Return ONLY valid JSON:
+
+{{
+  "intent": "...",
+  "property_id": number or null,
+  "city": string or null,
+  "date": string or null,
+  "keywords": []
+}}
+
+Query: {user_query}
+"""
+
+    result = generate_response([
+        {"role": "user", "content": prompt}
+    ])
+
+    print("AI INTENT RAW:", result)
+
+    try:
+        return json.loads(result)
+    except:
+        return {"intent": "unknown"}
+
+
 def answer_question(question: str) -> dict:
     normalized_question = question.lower().strip()
+
+    ai_intent = classify_query_ai(question)
+    intent = ai_intent.get("intent")
+    
+    print("PARSED INTENT:", ai_intent)
 
     if not normalized_question:
         return {
@@ -58,6 +114,44 @@ def answer_question(question: str) -> dict:
             "answer": "Please enter a question.",
             "data": [],
         }
+
+    # ai routing stuff first, fallback to keyword matching if nothing works
+
+    if intent == "non_compliant":
+        rows = get_non_compliant_properties()
+        return _build_response(
+            "non_compliant_properties",
+            "I found the following non-compliant properties (AI retrieved).",
+            "I could not find any non-compliant properties.",
+            rows,
+        )
+
+    if intent == "compliant":
+        rows = get_compliant_properties()
+        return _build_response(
+            "compliant_properties",
+            "I found the following compliant properties (AI retrieved).",
+            "I could not find any compliant properties.",
+            rows,
+        )
+
+    if intent == "overdue_inspections":
+        rows = get_overdue_inspections()
+        return _build_response(
+            "overdue_inspections",
+            "I found the following overdue inspections (AI retrieved).",
+            "I could not find any overdue inspections.",
+            rows,
+        )
+
+    if intent == "overdue_foi":
+        rows = get_overdue_foi_requests()
+        return _build_response(
+            "overdue_foi_requests",
+            "I found the following overdue FOI requests (AI retrieved).",
+            "I could not find any overdue FOI requests.",
+            rows,
+        )
 
     if "non-compliant" in normalized_question or "non compliant" in normalized_question:
         rows = get_non_compliant_properties()
