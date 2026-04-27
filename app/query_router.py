@@ -11,7 +11,7 @@ from app.discovery_service import (
     get_properties_inspected_after,
     get_property_foi_requests,
     get_property_overview,
-    get_property_repairs,
+    get_property_repairs, sanitize_where_clause,
 )
 from app.document_retrieval_service import (
     search_documents,
@@ -53,36 +53,56 @@ def _extract_property_id(normalized_question: str) -> int | None:
 
 
 def classify_query_ai(user_query: str) -> dict:
-    prompt = prompt = f"""
-You are an AI assistant for housing association FOI queries.
+    prompt = f"""
+You are an AI assistant that converts housing queries into structured database filters.
 
-Your job is to classify the user's request into ONE of the following intents:
+You are working with a PostgreSQL database with these fields:
+- property_id
+- postcode
+- city
+- compliance_status
+- last_inspection_date
 
-- non_compliant (properties not meeting compliance standards, unsafe, poor condition, failed inspections, bad condition)
-- compliant (properties meeting standards)
-- overdue_inspections (late or overdue inspections)
-- inspected_after (properties inspected after a certain date)
-- properties_by_city (properties in a specific location)
-- overdue_foi (late FOI requests)
-- property_case_file (full details for a specific property)
-- document_search (reports, documents, notes)
-- find_property (lookup by postcode, UPRN, or identifier)
+Your job:
+1. Identify the intent
+2. Generate a SAFE SQL WHERE clause (no SELECT, no DROP, no INSERT)
+
+Rules:
+- Only return a WHERE clause condition (e.g. postcode ILIKE 'G7%')
+- Do NOT include the word WHERE
+- Use ILIKE for text matching
+- Use % for partial matches
+- If no filters, return "TRUE"
+
+Database details (this should be expanded with key Schema information):
+
+- compliance_status values are EXACTLY:
+  - 'Compliant'
+  - 'Non-Compliant'
+
+- Postcodes are full UK postcodes (e.g. "SW1A 1AA")
+  - Use prefix matching for partial queries (e.g. 'SW1%')
+
+Rules:
+- Always use exact values for compliance_status
+- For non-compliant, use: compliance_status = 'Non-Compliant'
+- Do NOT invent values like 'non_compliant'
+
+Intent options:
+- non_compliant
+- compliant
+- overdue_inspections
+- overdue_foi
+- property_case_file
+- find_property
+- document_search
 - unknown
-
-IMPORTANT:
-- Map natural language to the closest intent
-- "bad condition", "unsafe", "failing", "not up to standard" → non_compliant
-- "late", "behind", "overdue" → overdue_inspections or overdue_foi
-- Be flexible in interpretation
 
 Return ONLY valid JSON:
 
 {{
   "intent": "...",
-  "property_id": number or null,
-  "city": string or null,
-  "date": string or null,
-  "keywords": []
+  "where_clause": "..."
 }}
 
 Query: {user_query}
@@ -105,7 +125,8 @@ def answer_question(question: str) -> dict:
 
     ai_intent = classify_query_ai(question)
     intent = ai_intent.get("intent")
-    
+    where_clause = ai_intent.get("where_clause", "TRUE")
+
     print("PARSED INTENT:", ai_intent)
 
     if not normalized_question:
@@ -115,14 +136,15 @@ def answer_question(question: str) -> dict:
             "data": [],
         }
 
-    # ai routing stuff first, fallback to keyword matching if nothing works
+    # AI routing stuff first, fallback to keyword matching if nothing works
 
     if intent == "non_compliant":
-        rows = get_non_compliant_properties()
+        where_clause = sanitize_where_clause(where_clause)
+        rows = get_non_compliant_properties(where_clause)
         return _build_response(
             "non_compliant_properties",
-            "I found the following non-compliant properties (AI retrieved).",
-            "I could not find any non-compliant properties.",
+            f"I found the following non-compliant properties for your question: {question} (AI retrieved).",
+            f"I could not find any non-compliant properties for your question: {question}.",
             rows,
         )
 

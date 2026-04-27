@@ -1,5 +1,19 @@
 from app.database import db_cursor
 
+# SQL Injection checks
+
+def sanitize_where_clause(where_clause: str) -> str:
+    if not where_clause:
+        return "TRUE"
+
+    blocked = [";", "drop", "delete", "insert", "update"]
+
+    if any(word in where_clause.lower() for word in blocked):
+        return "TRUE"
+
+    return where_clause
+
+
 
 def find_property(search_term: str) -> list[dict]:
     query = """
@@ -87,8 +101,8 @@ def get_property_foi_requests(property_id: int) -> list[dict]:
         return cursor.fetchall()
 
 
-def get_non_compliant_properties() -> list[dict]:
-    query = """
+def get_non_compliant_properties(where_clause: str = "TRUE") -> list[dict]:
+    query = f"""
         SELECT
             property_id,
             uprn,
@@ -99,6 +113,7 @@ def get_non_compliant_properties() -> list[dict]:
             last_inspection_date
         FROM properties
         WHERE compliance_status = 'Non-Compliant'
+        AND ({where_clause})
         ORDER BY last_inspection_date ASC
         LIMIT 20;
     """
