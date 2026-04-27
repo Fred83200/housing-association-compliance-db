@@ -1,0 +1,13 @@
+Property ID: 1
+UPRN: UPRNX00001
+Document Type: Boiler Repair Report
+Category: Boiler Repair
+Related Keywords: heating, hot water, boiler, pressure, repair, contractor visit
+
+SafeHeat Services attended the property after the tenant reported no heating and no hot water.
+
+The engineer identified low boiler pressure and a faulty valve. The valve was replaced during the visit and the system pressure was restored.
+
+The repair was marked as completed. A follow-up check was recommended if the tenant reports further loss of pressure.
+
+This document supports repair discovery for boiler, heating, hot water and contractor attendance questions.

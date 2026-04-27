@@ -1,0 +1,13 @@
+Property ID: 1
+UPRN: UPRNX00001
+Document Type: Damp and Mould Investigation Notes
+Category: Damp and Mould
+Related Keywords: damp, mould, condensation, ventilation, bedroom, inspection, remediation
+
+The tenant reported mould growth in the bedroom corner.
+
+The contractor inspected the room and identified poor ventilation and signs of condensation. The affected wall was treated and advice was provided on ventilation.
+
+A follow-up inspection was recommended within 60 days to confirm the mould had not returned.
+
+This document supports discovery for damp and mould issues, property condition, inspection evidence and tenant repair history.

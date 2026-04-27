@@ -1,0 +1,11 @@
+Property ID: 4
+UPRN: UPRNX00004
+Document Type: Fire Safety Inspection Report
+Category: Fire Safety
+Related Keywords: fire door, fire safety, inspection, compliance, replacement, door closer
+
+A fire safety inspection found that the front entrance fire door was not closing correctly.
+
+The contractor recommended adjustment or replacement of the door closer. The issue was raised as a compliance concern because the door forms part of the property fire safety controls.
+
+This document supports discovery for fire safety requests, compliance evidence and contractor repair history.

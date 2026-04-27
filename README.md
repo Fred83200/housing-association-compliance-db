@@ -47,10 +47,16 @@ housing-association-compliance-db/
 ├── app/
 │   ├── main.py
 │   ├── database.py
+│   ├── document_retrieval_service.py
 │   ├── discovery_service.py
 │   ├── query_router.py
 │   └── static/
 │       └── index.html
+├── documents/
+│   ├── property_1_boiler_report.txt
+│   ├── property_1_damp_mould_notes.txt
+│   ├── property_2_electrical_inspection.txt
+│   ├── property_4_fire_safety_report.txt
 └── docs/
     └── data_model.md
 ```
@@ -214,7 +220,7 @@ Six precomputed views used by the API:
 
 ### Read-only user — `007_create_readonly_user.sql`
 
-Creates a restricted database user to simulate production-level access control.
+Creates a restricted database user to simulate production level access control
 
 ---
 
@@ -290,6 +296,18 @@ Find postcode SW1A 1AA
 Find UPRN UPRNX00001
 ```
 
+**Documents (RAG)**
+```
+Show me documents about boiler repair
+Find reports about fire safety
+Show me documents about damp and mould
+```
+
+**Combined (Structured + Documents)**
+```
+Show me everything for property 1
+```
+
 ### Example SQL query
 
 ```sql
@@ -299,6 +317,147 @@ JOIN tenants t ON p.property_id = t.property_id;
 ```
 
 ---
+
+## Unstructured Data — RAG Simulation (Local SharePoint Equivalent)
+
+This project includes a lightweight Retrieval Augmented Generation (RAG) simulation to demonstrate how unstructured data (e.g. SharePoint documents) can be integrated with structured database queries.
+
+### Why this exists
+
+In a real Azure AI Foundry setup:
+
+- Documents would live in SharePoint / Blob Storage
+- They would be indexed using Azure AI Search
+- Queries would retrieve relevant documents dynamically
+
+> This project simulates that behaviour locally and for free.
+
+### How It Works
+
+The RAG pipeline is implemented in:
+
+```
+app/document_retrieval_service.py
+```
+
+It follows a simplified version of a real world retrieval flow:
+
+**Step 1 — User Question**
+
+Example:
+```
+Show me documents about boiler repair
+```
+
+**Step 2 — Keyword Extraction**
+
+The system removes:
+- Stop words (`show`, `me`, `about`, etc.)
+- Generic words (`report`, `document`, etc.)
+
+Result:
+```
+["boiler", "repair"]
+```
+
+**Step 3 — Document Scanning**
+
+All files in:
+```
+/documents/*.txt
+```
+are read and analysed. Each document contains structured metadata such as:
+- Property ID
+- Document Type
+- Category
+- Keywords
+
+**Step 4 — Scoring**
+
+Each document is scored based on keyword matches:
+
+| Keyword Type | Weight |
+|---|---|
+| Important domain keywords (`boiler`, `fire`, `damp`) | High (5+) |
+| Standard matches | Medium (2–3) |
+
+> Only documents above a relevance threshold are returned
+
+**Step 5 — Ranked Results**
+
+The API returns:
+- File name
+- Relevance score
+- Content preview
+
+### Example RAG Queries (Working)
+
+These are fully supported and tested queries:
+
+**Boiler**
+```
+Show me documents about boiler repair
+```
+Returns: Boiler repair report only
+
+**Fire Safety**
+```
+Find reports about fire safety
+```
+Returns: Fire safety inspection report
+
+**Damp & Mould**
+```
+Show me documents about damp and mould
+```
+Returns: Damp & mould investigation notes
+
+### Property Case File + Documents (Hybrid Query)
+
+The system also supports combined structured + unstructured retrieval:
+
+```
+Show me everything for property 1
+```
+
+Returns:
+- Property overview (DB)
+- Repairs (DB)
+- FOI requests (DB)
+- Documents (RAG)
+
+This simulates a real AI Foundry "case file" retrieval scenario
+
+### Design Decisions
+
+| Decision | Reason |
+|---|---|
+| Local `.txt` documents | No dependency on SharePoint |
+| Keyword scoring | Deterministic and controllable |
+| No embeddings | Avoid cost and complexity |
+| Weighted keywords | Improve relevance for domain terms |
+| Threshold filtering | Avoid noisy results |
+
+### Limitations (Expected for PoC)
+
+- No semantic understanding (keyword based only)
+- No embeddings / vector search
+- No document chunking
+- No cross document summarisation
+
+> This is intentional the goal is to prove the architecture, not the ML
+
+### How This Maps to Azure AI Foundry
+
+| This Project | Real Azure Equivalent |
+|---|---|
+| `/documents` folder | SharePoint / Blob Storage |
+| Keyword scoring | Vector search / embeddings |
+| `document_retrieval_service.py` | Retrieval pipeline |
+| Query router | Orchestration layer |
+| `/chat` endpoint | Copilot / AI agent |
+
+
 
 ## Design Principles
 
@@ -315,15 +474,6 @@ JOIN tenants t ON p.property_id = t.property_id;
 - API responds in 1–3 seconds
 - Queries return structured results
 - Chat UI displays data immediately
-
----
-
-## Future Improvements
-
-- [ ] Add document retrieval via SharePoint / RAG pipeline
-- [ ] Add a caching layer
-- [ ] Expand natural language query understanding
-- [ ] Build dashboards for common compliance queries
 
 ---
 

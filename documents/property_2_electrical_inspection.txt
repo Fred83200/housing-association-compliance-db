@@ -1,0 +1,13 @@
+Property ID: 2
+UPRN: UPRNX00002
+Document Type: Electrical Inspection Report
+Category: Electrical Inspection
+Related Keywords: electrical, sockets, fuse board, inspection, safety, contractor
+
+An electrical contractor attended the property after the tenant reported kitchen sockets tripping the fuse board.
+
+The engineer inspected the socket circuit and identified a potential overload issue. Further testing was recommended before closing the repair.
+
+The inspection was linked to electrical safety evidence for this property.
+
+This document supports discovery for electrical safety requests, contractor attendance, and inspection history.
