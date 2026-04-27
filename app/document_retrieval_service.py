@@ -25,6 +25,7 @@ STOP_WORDS = {
     "report",
     "notes",
     "note",
+    "linked",
 }
 
 GENERIC_WORDS = {
@@ -53,10 +54,33 @@ IMPORTANT_KEYWORDS = {
     "safety": 5,
     "damp": 7,
     "mould": 7,
+    "mold": 7,
     "electrical": 7,
+    "electric": 7,
     "socket": 5,
     "sockets": 5,
     "fuse": 5,
+    "door": 4,
+    "tenant": 3,
+    "resident": 3,
+    "postcode": 3,
+    "uprn": 3,
+    "condensation": 5,
+    "bedroom": 3,
+    "valve": 3,
+    "pressure": 3,
+}
+
+SYNONYMS = {
+    "mould": ["mold", "damp", "condensation", "black marks"],
+    "mold": ["mould", "damp", "condensation", "black marks"],
+    "damp": ["mould", "mold", "condensation", "black marks"],
+    "boiler": ["heating", "hot water", "pressure", "valve"],
+    "heating": ["boiler", "hot water"],
+    "fire": ["fire door", "door closer", "safety"],
+    "safety": ["fire", "inspection", "compliance"],
+    "electrical": ["electric", "socket", "sockets", "fuse", "fuse board"],
+    "electric": ["electrical", "socket", "sockets", "fuse", "fuse board"],
 }
 
 
@@ -75,6 +99,7 @@ def _tokenise_search_text(search_text: str) -> list[str]:
         .replace("?", " ")
         .replace("(", " ")
         .replace(")", " ")
+        .replace("/", " ")
     )
 
     tokens: list[str] = []
@@ -103,15 +128,56 @@ def _read_document(file_path: Path) -> str:
     return file_path.read_text(encoding="utf-8")
 
 
+def _get_document_type(file_path: Path) -> str:
+    relative_path = file_path.relative_to(DOCUMENTS_DIR)
+
+    if "structured" in relative_path.parts:
+        return "structured"
+
+    if "unstructured" in relative_path.parts:
+        return "unstructured"
+
+    return "unknown"
+
+
+def _get_confidence(score: int) -> str:
+    if score >= 15:
+        return "high"
+
+    if score >= 7:
+        return "medium"
+
+    return "low"
+
+
 def _score_document(content: str, search_terms: list[str]) -> int:
     normalised_content = _normalise(content)
-    tokens = _tokenise_search_text(" ".join(search_terms))
+    combined_search_text = " ".join(search_terms)
+    tokens = _tokenise_search_text(combined_search_text)
 
     score = 0
 
+    for term in search_terms:
+        normalised_term = _normalise(term)
+
+        if not normalised_term:
+            continue
+
+        if normalised_term in normalised_content:
+            score += 10
+
     for token in tokens:
         if token in normalised_content:
-            score += IMPORTANT_KEYWORDS.get(token, 2)
+            if token.startswith("uprn"):
+                score += 20
+            elif any(char.isdigit() for char in token) and len(token) >= 5:
+                score += 12
+            else:
+                score += IMPORTANT_KEYWORDS.get(token, 2)
+
+        for synonym in SYNONYMS.get(token, []):
+            if synonym in normalised_content:
+                score += 2
 
     return score
 
@@ -119,35 +185,42 @@ def _score_document(content: str, search_terms: list[str]) -> int:
 def search_documents(
     search_terms: list[str],
     limit: int = 5,
-    minimum_score: int = 7,
+    minimum_score: int | None = None,
 ) -> list[dict]:
-    """
-    Local SharePoint style document retrieval simulation
-
-    This mimics a simple RAG retrieval step:
-    - read local documents
-    - extract useful keywords from the query
-    - score documents using domain aware keywords
-    - remove weak matches
-    - return ranked document snippets
-    """
-
     if not DOCUMENTS_DIR.exists():
         return []
 
+    combined_search_text = " ".join(search_terms).lower()
+
+    if minimum_score is None:
+        if any(
+            word in combined_search_text
+            for word in ["mould", "mold", "damp", "boiler", "heating", "fire", "electrical", "electric"]
+        ):
+            minimum_score = 6
+        elif any(char.isdigit() for char in combined_search_text):
+            minimum_score = 10
+        else:
+            minimum_score = 8
+
     matches: list[dict] = []
 
-    for file_path in DOCUMENTS_DIR.glob("*.txt"):
+    for file_path in DOCUMENTS_DIR.rglob("*.txt"):
         content = _read_document(file_path)
         score = _score_document(content, search_terms)
 
         if score < minimum_score:
             continue
 
+        relative_path = file_path.relative_to(DOCUMENTS_DIR)
+
         matches.append(
             {
                 "file_name": file_path.name,
+                "relative_path": str(relative_path),
+                "document_source_type": _get_document_type(file_path),
                 "score": score,
+                "confidence": _get_confidence(score),
                 "content_preview": content[:700],
             }
         )
@@ -178,6 +251,6 @@ def search_documents_for_property(
 
     return search_documents(
         search_terms=search_terms,
-        limit=5,
-        minimum_score=1,
+        limit=10,
+        minimum_score=10,
     )
