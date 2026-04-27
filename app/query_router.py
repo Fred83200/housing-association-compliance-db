@@ -1,6 +1,7 @@
 import json
 
 from app.llm_client import generate_response
+from app.configs import Configs
 from app.discovery_service import (
     find_property,
     get_compliant_properties,
@@ -17,6 +18,8 @@ from app.document_retrieval_service import (
     search_documents,
     search_documents_for_property,
 )
+
+configs = Configs()
 
 
 def _build_response(intent: str, success_msg: str, empty_msg: str, rows: list) -> dict:
@@ -54,59 +57,65 @@ def _extract_property_id(normalized_question: str) -> int | None:
 
 def classify_query_ai(user_query: str) -> dict:
     prompt = f"""
-You are an AI assistant that converts housing queries into structured database filters.
+        You are an AI assistant that converts housing queries into structured database filters.
+        
+        You are working with a PostgreSQL database with these fields:
+        - property_id
+        - postcode
+        - city
+        - compliance_status
+        - last_inspection_date
+        
+        Your job:
+        1. Identify the intent
+        2. Generate a SAFE SQL WHERE clause (no SELECT, no DROP, no INSERT)
+        
+        Rules:
+        - Only return a WHERE clause condition (e.g. postcode ILIKE 'G7%')
+        - Do NOT include the word WHERE
+        - Use ILIKE for text matching
+        - Use % for partial matches
+        - If no filters, return "TRUE"
+        
+        Database details (this should be expanded with key Schema information):
+        
+        IMPORTANT:
 
-You are working with a PostgreSQL database with these fields:
-- property_id
-- postcode
-- city
-- compliance_status
-- last_inspection_date
-
-Your job:
-1. Identify the intent
-2. Generate a SAFE SQL WHERE clause (no SELECT, no DROP, no INSERT)
-
-Rules:
-- Only return a WHERE clause condition (e.g. postcode ILIKE 'G7%')
-- Do NOT include the word WHERE
-- Use ILIKE for text matching
-- Use % for partial matches
-- If no filters, return "TRUE"
-
-Database details (this should be expanded with key Schema information):
-
-- compliance_status values are EXACTLY:
-  - 'Compliant'
-  - 'Non-Compliant'
-
-- Postcodes are full UK postcodes (e.g. "SW1A 1AA")
-  - Use prefix matching for partial queries (e.g. 'SW1%')
-
-Rules:
-- Always use exact values for compliance_status
-- For non-compliant, use: compliance_status = 'Non-Compliant'
-- Do NOT invent values like 'non_compliant'
-
-Intent options:
-- non_compliant
-- compliant
-- overdue_inspections
-- overdue_foi
-- property_case_file
-- find_property
-- document_search
-- unknown
-
-Return ONLY valid JSON:
-
-{{
-  "intent": "...",
-  "where_clause": "..."
-}}
-
-Query: {user_query}
-"""
+        Each intent already has a base SQL filter applied in code.
+        
+        - For compliant_properties → compliance_status is already filtered
+        - For non_compliant_properties → compliance_status is already filtered
+        
+        DO NOT include compliance_status in the WHERE clause.
+        Only include additional filters like postcode, city, or dates.
+        
+        - Postcodes are full UK postcodes (e.g. "SW1A 1AA")
+          - Use prefix matching for partial queries (e.g. 'SW1%')
+        
+        Rules:
+        - Always use exact values for compliance_status
+        - For non-compliant, use: compliance_status = 'Non-Compliant'
+        - Do NOT invent values like 'non_compliant'
+        
+        Intent options:
+        - non_compliant_properties
+        - compliant_properties
+        - overdue_inspections
+        - overdue_foi_requests
+        - property_case_file
+        - find_property
+        - document_search
+        - unknown
+        
+        Return ONLY valid JSON:
+        
+        {{
+          "intent": "...",
+          "where_clause": "..."
+        }}
+        
+        Query: {user_query}
+        """
 
     result = generate_response([
         {"role": "user", "content": prompt}
@@ -123,12 +132,6 @@ Query: {user_query}
 def answer_question(question: str) -> dict:
     normalized_question = question.lower().strip()
 
-    ai_intent = classify_query_ai(question)
-    intent = ai_intent.get("intent")
-    where_clause = ai_intent.get("where_clause", "TRUE")
-
-    print("PARSED INTENT:", ai_intent)
-
     if not normalized_question:
         return {
             "intent": "empty_question",
@@ -138,42 +141,23 @@ def answer_question(question: str) -> dict:
 
     # AI routing stuff first, fallback to keyword matching if nothing works
 
-    if intent == "non_compliant":
-        where_clause = sanitize_where_clause(where_clause)
-        rows = get_non_compliant_properties(where_clause)
-        return _build_response(
-            "non_compliant_properties",
-            f"I found the following non-compliant properties for your question: {question} (AI retrieved).",
-            f"I could not find any non-compliant properties for your question: {question}.",
-            rows,
-        )
+    ai_intent = classify_query_ai(question)
+    intent = ai_intent.get("intent")
 
-    if intent == "compliant":
-        rows = get_compliant_properties()
-        return _build_response(
-            "compliant_properties",
-            "I found the following compliant properties (AI retrieved).",
-            "I could not find any compliant properties.",
-            rows,
-        )
+    print("PARSED INTENT:", ai_intent)
 
-    if intent == "overdue_inspections":
-        rows = get_overdue_inspections()
-        return _build_response(
-            "overdue_inspections",
-            "I found the following overdue inspections (AI retrieved).",
-            "I could not find any overdue inspections.",
-            rows,
-        )
+    where_clause = ai_intent.get("where_clause", "TRUE")
+    where_clause = sanitize_where_clause(where_clause)
 
-    if intent == "overdue_foi":
-        rows = get_overdue_foi_requests()
-        return _build_response(
-            "overdue_foi_requests",
-            "I found the following overdue FOI requests (AI retrieved).",
-            "I could not find any overdue FOI requests.",
-            rows,
-        )
+    try:
+        request_type_class_selection = configs.clarifier_class_dict[intent]
+        request_type_class = request_type_class_selection(intent, question, where_clause)
+        response = request_type_class.generate_response()
+        return response
+    except KeyError:
+        pass
+
+    # Keyword matching
 
     if "non-compliant" in normalized_question or "non compliant" in normalized_question:
         rows = get_non_compliant_properties()

@@ -6,9 +6,12 @@ def sanitize_where_clause(where_clause: str) -> str:
     if not where_clause:
         return "TRUE"
 
-    blocked = [";", "drop", "delete", "insert", "update"]
+    blocked = [";", "drop", "delete", "insert", "update", "--"]
 
     if any(word in where_clause.lower() for word in blocked):
+        return "TRUE"
+
+    if " or " in where_clause.lower():
         return "TRUE"
 
     return where_clause
