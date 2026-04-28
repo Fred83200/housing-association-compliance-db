@@ -103,11 +103,17 @@ def answer_question(question: str) -> dict:
 
     print("PARSED INTENT:", ai_intent)
 
+    # Fallback to keyword counting if AI search doesn't retrieve anything
+
     try:
         request_type_class_selection = configs.clarifier_class_dict[intent]
         request_type_class = request_type_class_selection(intent, question)
         response = request_type_class.execute()
-        return response
+
+        if "could" in response.get("answer"):
+            pass
+        else:
+            return response
     except KeyError:
         pass
 

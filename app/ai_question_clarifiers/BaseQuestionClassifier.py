@@ -41,6 +41,8 @@ class BaseQuestionClassifier:
 
         query = self.generate_sql_query(where_clause)
 
+        print(query)
+
         rows = self.run_query_and_get_rows(query)
 
         # print("---- DEBUG ----")
