@@ -1,6 +1,6 @@
 import json
 
-from app.llm_client import generate_response
+from app.llm_client import llm_generate_response
 from app.configs import Configs
 from app.discovery_service import (
     find_property,
@@ -12,7 +12,7 @@ from app.discovery_service import (
     get_properties_inspected_after,
     get_property_foi_requests,
     get_property_overview,
-    get_property_repairs, sanitize_where_clause,
+    get_property_repairs,
 )
 from app.document_retrieval_service import (
     search_documents,
@@ -55,78 +55,35 @@ def _extract_property_id(normalized_question: str) -> int | None:
     return None
 
 
-def classify_query_ai(user_query: str) -> dict:
+def classify_intent(user_query: str) -> str:
     prompt = f"""
-        You are an AI assistant that converts housing queries into structured database filters.
-        
-        You are working with a PostgreSQL database with these fields:
-        - property_id
-        - postcode
-        - city
-        - compliance_status
-        - last_inspection_date
-        
-        Your job:
-        1. Identify the intent
-        2. Generate a SAFE SQL WHERE clause (no SELECT, no DROP, no INSERT)
-        
-        Rules:
-        - Only return a WHERE clause condition (e.g. postcode ILIKE 'G7%')
-        - Do NOT include the word WHERE
-        - Use ILIKE for text matching
-        - Use % for partial matches
-        - If no filters, return "TRUE"
-        
-        Database details (this should be expanded with key Schema information):
-        
-        IMPORTANT:
+    Classify the user query into ONE of these intents:
 
-        Each intent already has a base SQL filter applied in code.
-        
-        - For compliant_properties → compliance_status is already filtered
-        - For non_compliant_properties → compliance_status is already filtered
-        
-        DO NOT include compliance_status in the WHERE clause.
-        Only include additional filters like postcode, city, or dates.
-        
-        - Postcodes are full UK postcodes (e.g. "SW1A 1AA")
-          - Use prefix matching for partial queries (e.g. 'SW1%')
-        
-        Rules:
-        - Always use exact values for compliance_status
-        - For non-compliant, use: compliance_status = 'Non-Compliant'
-        - Do NOT invent values like 'non_compliant'
-        
-        Intent options:
-        - non_compliant_properties
-        - compliant_properties
-        - overdue_inspections
-        - overdue_foi_requests
-        - property_case_file
-        - find_property
-        - document_search
-        - unknown
-        
-        Return ONLY valid JSON:
-        
-        {{
-          "intent": "...",
-          "where_clause": "..."
-        }}
-        
-        Query: {user_query}
-        """
+    - non_compliant_properties
+    - compliant_properties
+    - overdue_inspections
+    - overdue_foi_requests
+    - property_case_file
+    - find_property
+    - document_search
+    - unknown
 
-    result = generate_response([
+    Return ONLY JSON:
+    {{
+      "intent": "..."
+    }}
+
+    The User Query: {user_query}
+    """
+
+    result = llm_generate_response([
         {"role": "user", "content": prompt}
     ])
 
-    print("AI INTENT RAW:", result)
-
     try:
-        return json.loads(result)
+        return json.loads(result).get("intent", "unknown")
     except:
-        return {"intent": "unknown"}
+        return "unknown"
 
 
 def answer_question(question: str) -> dict:
@@ -141,18 +98,15 @@ def answer_question(question: str) -> dict:
 
     # AI routing stuff first, fallback to keyword matching if nothing works
 
-    ai_intent = classify_query_ai(question)
-    intent = ai_intent.get("intent")
+    ai_intent = classify_intent(normalized_question)
+    intent = ai_intent
 
     print("PARSED INTENT:", ai_intent)
 
-    where_clause = ai_intent.get("where_clause", "TRUE")
-    where_clause = sanitize_where_clause(where_clause)
-
     try:
         request_type_class_selection = configs.clarifier_class_dict[intent]
-        request_type_class = request_type_class_selection(intent, question, where_clause)
-        response = request_type_class.generate_response()
+        request_type_class = request_type_class_selection(intent, question)
+        response = request_type_class.execute()
         return response
     except KeyError:
         pass
