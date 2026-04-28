@@ -45,16 +45,25 @@ class BaseQuestionClassifier:
 
         rows = self.run_query_and_get_rows(query)
 
-        # print("---- DEBUG ----")
+        # print("DEBUG -----")
         # print("QUESTION:", self.question)
         # print("RAW WHERE:", raw_where)
         # print("SAFE WHERE:", where_clause)
         # print("SQL:", query)
         # print("----------------")
 
+        if not rows:
+            natural_answer = self.create_failure_message()
+        else:
+
+            row_count = len(rows)
+
+            natural_answer = self.generate_natural_response(rows, row_count)
+
+
         return {
             "intent": self.intent,
-            "answer": self.create_success_message() if rows else self.create_failure_message(),
+            "answer": natural_answer,
             "data": rows,
         }
 
@@ -117,6 +126,43 @@ class BaseQuestionClassifier:
         """
 
         print(prompt)
+
+        result = llm_generate_response([
+            {"role": "user", "content": prompt}
+        ])
+
+        return result.strip()
+
+    def generate_natural_response(self, rows: list[dict], row_count: int) -> str:
+
+        if not rows:
+            return self.create_failure_message()
+
+        # limitting rows for now
+        sample_rows = rows[:10]
+
+        prompt = f"""
+                    You are drafting a response to a UK housing association FOI request.
+                    
+                    User question:
+                    {self.question}
+                    
+                    Data:
+                    
+                    There are {row_count} rows in this response
+                    
+                    {sample_rows}
+                    
+                    Guidelines:
+                    - Use formal, neutral tone
+                    - Be factual and concise
+                    - Summarise key findings
+                    - Mention counts where relevant
+                    - Highlight any risks (e.g. overdue inspections, non-compliance)
+                    - Do NOT speculate beyond the data
+                    
+                    Response:
+                    """
 
         result = llm_generate_response([
             {"role": "user", "content": prompt}
