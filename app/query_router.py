@@ -57,24 +57,25 @@ def _extract_property_id(normalized_question: str) -> int | None:
 
 def classify_intent(user_query: str) -> str:
     prompt = f"""
-    Classify the user query into ONE of these intents:
-
-    - non_compliant_properties
-    - compliant_properties
-    - overdue_inspections
-    - overdue_foi_requests
-    - property_case_file
-    - find_property
-    - document_search
-    - unknown
-
-    Return ONLY JSON:
-    {{
-      "intent": "..."
-    }}
-
-    The User Query: {user_query}
-    """
+                Classify the user query into ONE of these intents (The default should be document_search):
+                
+                Only classify as one of the other intents if they specifically mention the intent.
+                
+                - document_search (if the user mentions documents, reports, emails, notes, or evidence)
+                - non_compliant_properties (If they specifically ask for non compliant properties)
+                - compliant_properties (If they specifically ask for compliant properties)
+                - overdue_inspections (If they specifically ask for overdue inspections)
+                - overdue_foi_requests (If they specifically ask for overdue foi requests)
+                - property_case_file (If they specifically ask for property case files)
+                
+                                    
+                Return ONLY JSON:
+                {{
+                  "intent": "..."
+                }}
+                
+                User Query: {user_query}
+                """
 
     result = llm_generate_response([
         {"role": "user", "content": prompt}

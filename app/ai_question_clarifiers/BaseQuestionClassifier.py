@@ -45,13 +45,6 @@ class BaseQuestionClassifier:
 
         rows = self.run_query_and_get_rows(query)
 
-        # print("DEBUG -----")
-        # print("QUESTION:", self.question)
-        # print("RAW WHERE:", raw_where)
-        # print("SAFE WHERE:", where_clause)
-        # print("SQL:", query)
-        # print("----------------")
-
         if not rows:
             natural_answer = self.create_failure_message()
         else:
@@ -68,6 +61,13 @@ class BaseQuestionClassifier:
         }
 
     def get_schema_context(self) -> str:
+
+        """
+        Right now this is hardcoded in, and would have to be continually updated. I'm thinking in future improvements
+        it would be given the overall schema of the DB and then query the DB itself for the schema of required tables.
+        Even better if there is good column descriptions in the DB metadata
+        """
+
         return """
         Table: properties
 
