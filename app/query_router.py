@@ -1,3 +1,7 @@
+import json
+
+from app.llm_client import llm_generate_response
+from app.configs import Configs
 from app.discovery_service import (
     find_property,
     get_compliant_properties,
@@ -14,6 +18,8 @@ from app.document_retrieval_service import (
     search_documents,
     search_documents_for_property,
 )
+
+configs = Configs()
 
 
 def _build_response(intent: str, success_msg: str, empty_msg: str, rows: list) -> dict:
@@ -49,6 +55,38 @@ def _extract_property_id(normalized_question: str) -> int | None:
     return None
 
 
+def classify_intent(user_query: str) -> str:
+    prompt = f"""
+                Classify the user query into ONE of these intents (The default should be document_search):
+                
+                Only classify as one of the other intents if they specifically mention the intent.
+                
+                - document_search (if the user mentions documents, reports, emails, notes, or evidence)
+                - non_compliant_properties (If they specifically ask for non compliant properties)
+                - compliant_properties (If they specifically ask for compliant properties)
+                - overdue_inspections (If they specifically ask for overdue inspections)
+                - overdue_foi_requests (If they specifically ask for overdue foi requests)
+                - property_case_file (If they specifically ask for property case files)
+                
+                                    
+                Return ONLY JSON:
+                {{
+                  "intent": "..."
+                }}
+                
+                User Query: {user_query}
+                """
+
+    result = llm_generate_response([
+        {"role": "user", "content": prompt}
+    ])
+
+    try:
+        return json.loads(result).get("intent", "unknown")
+    except:
+        return "unknown"
+
+
 def answer_question(question: str) -> dict:
     normalized_question = question.lower().strip()
 
@@ -58,6 +96,29 @@ def answer_question(question: str) -> dict:
             "answer": "Please enter a question.",
             "data": [],
         }
+
+    # AI routing stuff first, fallback to keyword matching if nothing works
+
+    ai_intent = classify_intent(normalized_question)
+    intent = ai_intent
+
+    print("PARSED INTENT:", ai_intent)
+
+    # Fallback to keyword counting if AI search doesn't retrieve anything
+
+    try:
+        request_type_class_selection = configs.clarifier_class_dict[intent]
+        request_type_class = request_type_class_selection(intent, question)
+        response = request_type_class.execute()
+
+        if "could" in response.get("answer"):
+            pass
+        else:
+            return response
+    except KeyError:
+        pass
+
+    # Keyword matching
 
     if "non-compliant" in normalized_question or "non compliant" in normalized_question:
         rows = get_non_compliant_properties()
