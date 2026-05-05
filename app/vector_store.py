@@ -63,8 +63,7 @@ class DocumentStore:
         print("Vector index built successfully.")
 
     def search(self, query: str, k: int = 3):
-        if self.index is None:
-            raise ValueError("Index not built")
+        _ensure_index()
 
         query_embedding = np.array(
             [get_embedding(query)]
@@ -84,5 +83,8 @@ class DocumentStore:
 
 
 doc_store = DocumentStore()
-doc_store.load_documents()
-doc_store.build_index()
+
+def _ensure_index():
+    if doc_store.index is None:
+        doc_store.load_documents()
+        doc_store.build_index()
