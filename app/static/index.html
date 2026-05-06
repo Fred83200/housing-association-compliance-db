@@ -1,144 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
+  
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STAIRS Response Agent — Greenfields Housing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.css" />
-  <style>
-    /* Custom styles on top of GDS — minimal, only where GDS has no built-in pattern */
 
-    /* Stat cards for dashboard KPIs */
-    .app-stat-card {
-      border-left: 5px solid #1d70b8;
-      padding: 15px 20px;
-      background: #fff;
-    }
-    .app-stat-card--red    { border-left-color: #d4351c; }
-    .app-stat-card--yellow { border-left-color: #fd0; }
-    .app-stat-card--green  { border-left-color: #00703c; }
-    .app-stat-card--blue   { border-left-color: #1d70b8; }
-    .app-stat-card__value  { font-size: 3rem; font-weight: 700; line-height: 1; margin: 4px 0 2px; }
-    .app-stat-card__label  { font-size: 1rem; color: #505a5f; font-weight: 400; }
-    .app-stat-card__detail { font-size: 0.875rem; color: #505a5f; margin-top: 4px; }
+  <link rel="stylesheet" href="css/styles.css">
 
-    /* Simple chat layout */
-    .app-chat-messages {
-      border: 1px solid #b1b4b6;
-      padding: 20px;
-      min-height: 320px;
-      max-height: 420px;
-      overflow-y: auto;
-      background: #f3f2f1;
-      margin-bottom: 15px;
-    }
-    .app-chat-msg { margin-bottom: 15px; display: flex; gap: 10px; }
-    .app-chat-msg--user { flex-direction: row-reverse; }
-    .app-chat-avatar {
-      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 13px; font-family: GDS Transport, arial, sans-serif;
-    }
-    .app-chat-avatar--bot  { background: #1d70b8; color: #fff; }
-    .app-chat-avatar--user { background: #505a5f; color: #fff; }
-    .app-chat-bubble {
-      max-width: 70%; padding: 12px 15px;
-      font-size: 1rem; line-height: 1.5;
-    }
-    .app-chat-bubble--bot  { background: #fff; border: 1px solid #b1b4b6; }
-    .app-chat-bubble--user { background: #1d70b8; color: #fff; }
-
-    /* Workflow task list (used for STAIRS progress stepper) */
-    .app-stepper { display: flex; gap: 0; margin-bottom: 30px; }
-    .app-stepper__step { flex: 1; text-align: center; position: relative; }
-    .app-stepper__step:not(:last-child)::after {
-      content: ''; position: absolute; top: 14px; left: 50%; right: -50%;
-      height: 2px; background: #b1b4b6; z-index: 0;
-    }
-    .app-stepper__step--done:not(:last-child)::after  { background: #00703c; }
-    .app-stepper__step--active:not(:last-child)::after { background: #b1b4b6; }
-    .app-stepper__dot {
-      width: 28px; height: 28px; border-radius: 50%; border: 2px solid #b1b4b6;
-      background: #fff; color: #b1b4b6; font-weight: 700; font-size: 12px;
-      display: inline-flex; align-items: center; justify-content: center;
-      position: relative; z-index: 1;
-    }
-    .app-stepper__step--done   .app-stepper__dot { background: #00703c; border-color: #00703c; color: #fff; }
-    .app-stepper__step--active .app-stepper__dot { background: #1d70b8; border-color: #1d70b8; color: #fff; }
-    .app-stepper__label { font-size: 0.75rem; margin-top: 5px; color: #505a5f; }
-    .app-stepper__step--active .app-stepper__label { color: #1d70b8; font-weight: 700; }
-
-    /* Redacted text block */
-    .app-redacted { background: #1a1a1a; color: #1a1a1a; border-radius: 2px; padding: 0 3px; }
-
-    /* Document file row */
-    .app-doc-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #b1b4b6;
-    }
-    .app-doc-row:last-child { border-bottom: none; }
-
-    /* Screen toggle */
-    .app-screen { display: none; }
-    .app-screen--active { display: block; }
-
-    /* Suggested chips */
-    .app-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-    .app-chip {
-      display: inline-block; padding: 5px 12px; border: 2px solid #1d70b8;
-      color: #1d70b8; cursor: pointer; font-size: 0.875rem;
-      font-family: GDS Transport, arial, sans-serif; background: transparent;
-    }
-    .app-chip:hover { background: #1d70b8; color: #fff; }
-
-    /* Deadline colour helpers */
-    .app-deadline--urgent { color: #d4351c; font-weight: 700; }
-    .app-deadline--soon   { color: #594d00; font-weight: 700; }
-    .app-deadline--ok     { color: #005a30; }
-
-    /* Inter font throughout — GDS Transport unavailable from CDN */
-    body, .govuk-body, .govuk-heading-xl, .govuk-heading-l,
-    .govuk-heading-m, .govuk-heading-s, .govuk-table, .govuk-button,
-    .govuk-label, .govuk-hint, .govuk-tag, .govuk-phase-banner,
-    .govuk-header, .govuk-service-navigation, .govuk-footer {
-      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
-    }
-
-    /* Active item in service navigation */
-    .govuk-service-navigation__item--active .govuk-service-navigation__link {
-      font-weight: 700;
-      text-decoration: underline;
-      text-decoration-color: #fff;
-      text-decoration-thickness: 3px;
-      text-underline-offset: 4px;
-    }
-
-    /* Timeline */
-    .app-timeline__item { display: flex; gap: 12px; padding-bottom: 14px; position: relative; }
-    .app-timeline__item:not(:last-child)::before {
-      content: ''; position: absolute; left: 11px; top: 24px; bottom: 0;
-      width: 2px; background: #b1b4b6;
-    }
-    .app-timeline__marker {
-      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; position: relative; z-index: 1;
-    }
-    .app-timeline__marker--green  { background: #cce2d8; color: #005a30; }
-    .app-timeline__marker--blue   { background: #d2e2f1; color: #003078; }
-    .app-timeline__marker--yellow { background: #fdf7da; color: #594d00; }
-    .app-timeline__event  { font-size: 1rem; }
-    .app-timeline__time   { font-size: 0.875rem; color: #505a5f; }
-
-    /* GDS progress bar (reuse for compliance) */
-    .app-progress-bar { height: 8px; background: #b1b4b6; margin-bottom: 4px; }
-    .app-progress-bar__fill { height: 100%; background: #00703c; }
-    .app-progress-bar__fill--red    { background: #d4351c; }
-    .app-progress-bar__fill--yellow { background: #fd0; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAIRS Response Agent — Greenfields Housing</title>
+  
 </head>
 <body class="govuk-template__body">
   <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
@@ -210,6 +84,7 @@
   <!-- ═══ MAIN ══════════════════════════════════════ -->
   <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content">
+
 
       <!-- ─── DASHBOARD ────────────────────────────── -->
       <div class="app-screen app-screen--active" id="screen-dashboard">
@@ -1128,21 +1003,32 @@
     import { initAll } from 'https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.js'
     initAll()
   </script>
+<!-- Sticky Chat Button -->
+<button class="chat-icon" onclick="openChat()">
+  <img src="images/chat-icon.png" alt="Chat">
+  <span>Chat</span>
+</button>
+
+<!-- Chat Popup -->
+<div class="chat-popup" id="chatPopup">
+  <div class="chat-header">
+    <h3>Ask the Agent</h3>
+    <button onclick="closeChat()">×</button>
+  </div>
+
+  <div class="chat-body">
+    <p><strong>Agent:</strong> Hi! How can I help?</p>
+  </div>
+
+  <div class="chat-footer">
+    <input type="text" placeholder="Type your message..." />
+    <button>Send</button>
+  </div>
+</div>
+
+
 
   <script>
-    // ── Screen navigation ──────────────────────────
-    function showScreen(id) {
-      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('app-screen--active'));
-      const el = document.getElementById('screen-' + id);
-      if (el) el.classList.add('app-screen--active');
-
-      document.querySelectorAll('#nav-list .govuk-service-navigation__item').forEach(item => {
-        item.classList.remove('govuk-service-navigation__item--active');
-        if (item.dataset.screen === id) item.classList.add('govuk-service-navigation__item--active');
-      });
-
-      window.scrollTo(0, 0);
-    }
 
     // ── Chat ───────────────────────────────────────
     const mockResponses = {
@@ -1189,56 +1075,11 @@
           <tr class="govuk-table__row"><td class="govuk-table__cell">2 Ash Lane</td><td class="govuk-table__cell">Assessment overdue — no treatment on record</td></tr>
           <tr class="govuk-table__row"><td class="govuk-table__cell">Document match</td><td class="govuk-table__cell">damp_mould_risk_note.txt — relevance score 0.91</td></tr>
         </tbody></table>`
-    };
-
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim();
-      if (!text) return;
-      appendMsg(text, 'user');
-      input.value = '';
-      document.getElementById('chips').style.display = 'none';
-      setTimeout(() => {
-        const key = text.toLowerCase().replace(/[?!.]/g, '').trim();
-        const resp = mockResponses[key] ||
-          `I searched across all property records and documents for "<strong>${text}</strong>".<br><br>
-          Found <strong>3 relevant results</strong> combining database records and document matches.
-          Would you like me to compile a full case file or filter by a specific property?`;
-        appendMsg(resp, 'bot');
-      }, 800);
     }
 
-    function appendMsg(html, role) {
-      const container = document.getElementById('chat-messages');
-      const div = document.createElement('div');
-      div.className = 'app-chat-msg' + (role === 'user' ? ' app-chat-msg--user' : '');
-      const initials = role === 'user' ? 'SB' : 'AI';
-      const avClass = role === 'user' ? 'app-chat-avatar--user' : 'app-chat-avatar--bot';
-      div.innerHTML = `<div class="app-chat-avatar ${avClass}">${initials}</div>
-                       <div class="app-chat-bubble app-chat-bubble--${role}">${html}</div>`;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function sendChip(el) {
-      document.getElementById('chat-input').value = el.textContent.trim();
-      sendMessage();
-    }
-
-    function handleKey(e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    }
-
-    function clearChat() {
-      document.getElementById('chat-messages').innerHTML = `
-        <div class="app-chat-msg">
-          <div class="app-chat-avatar app-chat-avatar--bot">AI</div>
-          <div class="app-chat-bubble app-chat-bubble--bot">
-            Hello Sarah. I can search across all property records, compliance data, repair history, and documents. What would you like to know?
-          </div>
-        </div>`;
-      document.getElementById('chips').style.display = 'flex';
-    }
+   
   </script>
+
+  <script src="js/script.js"></script>
 </body>
 </html>
