@@ -1,168 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template">
+  
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STAIRS Response Agent — Greenfields Housing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.css" />
-  <style>
-    /* Custom styles on top of GDS — minimal, only where GDS has no built-in pattern */
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-    /* Stat cards for dashboard KPIs */
-    .app-stat-card {
-      border-left: 5px solid #1d70b8;
-      padding: 15px 20px;
-      background: #fff;
-    }
-    .app-stat-card--red    { border-left-color: #d4351c; }
-    .app-stat-card--yellow { border-left-color: #fd0; }
-    .app-stat-card--green  { border-left-color: #00703c; }
-    .app-stat-card--blue   { border-left-color: #1d70b8; }
-    .app-stat-card__value  { font-size: 3rem; font-weight: 700; line-height: 1; margin: 4px 0 2px; }
-    .app-stat-card__label  { font-size: 1rem; color: #505a5f; font-weight: 400; }
-    .app-stat-card__detail { font-size: 0.875rem; color: #505a5f; margin-top: 4px; }
+  <link rel="stylesheet" href="css/styles.css">
 
-    /* Simple chat layout */
-    .app-chat-messages {
-      border: 1px solid #b1b4b6;
-      padding: 20px;
-      min-height: 320px;
-      max-height: 420px;
-      overflow-y: auto;
-      background: #f3f2f1;
-      margin-bottom: 15px;
-    }
-    .app-chat-msg { margin-bottom: 15px; display: flex; gap: 10px; }
-    .app-chat-msg--user { flex-direction: row-reverse; }
-    .app-chat-avatar {
-      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 13px; font-family: GDS Transport, arial, sans-serif;
-    }
-    .app-chat-avatar--bot  { background: #1d70b8; color: #fff; }
-    .app-chat-avatar--user { background: #505a5f; color: #fff; }
-    .app-chat-bubble {
-      max-width: 70%; padding: 12px 15px;
-      font-size: 1rem; line-height: 1.5;
-    }
-    .app-chat-bubble--bot  { background: #fff; border: 1px solid #b1b4b6; }
-    .app-chat-bubble--user { background: #1d70b8; color: #fff; }
-
-    /* Workflow task list (used for STAIRS progress stepper) */
-    .app-stepper { display: flex; gap: 0; margin-bottom: 30px; }
-    .app-stepper__step { flex: 1; text-align: center; position: relative; }
-    .app-stepper__step:not(:last-child)::after {
-      content: ''; position: absolute; top: 14px; left: 50%; right: -50%;
-      height: 2px; background: #b1b4b6; z-index: 0;
-    }
-    .app-stepper__step--done:not(:last-child)::after  { background: #00703c; }
-    .app-stepper__step--active:not(:last-child)::after { background: #b1b4b6; }
-    .app-stepper__dot {
-      width: 28px; height: 28px; border-radius: 50%; border: 2px solid #b1b4b6;
-      background: #fff; color: #b1b4b6; font-weight: 700; font-size: 12px;
-      display: inline-flex; align-items: center; justify-content: center;
-      position: relative; z-index: 1;
-    }
-    .app-stepper__step--done   .app-stepper__dot { background: #00703c; border-color: #00703c; color: #fff; }
-    .app-stepper__step--active .app-stepper__dot { background: #1d70b8; border-color: #1d70b8; color: #fff; }
-    .app-stepper__label { font-size: 0.75rem; margin-top: 5px; color: #505a5f; }
-    .app-stepper__step--active .app-stepper__label { color: #1d70b8; font-weight: 700; }
-
-    /* Redacted text block */
-    .app-redacted { background: #1a1a1a; color: #1a1a1a; border-radius: 2px; padding: 0 3px; }
-
-    /* Document file row */
-    .app-doc-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #b1b4b6;
-    }
-    .app-doc-row:last-child { border-bottom: none; }
-
-    /* Screen toggle */
-    .app-screen { display: none; }
-    .app-screen--active { display: block; }
-
-    /* Suggested chips */
-    .app-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-    .app-chip {
-      display: inline-block; padding: 5px 12px; border: 2px solid #1d70b8;
-      color: #1d70b8; cursor: pointer; font-size: 0.875rem;
-      font-family: GDS Transport, arial, sans-serif; background: transparent;
-    }
-    .app-chip:hover { background: #1d70b8; color: #fff; }
-
-    /* Deadline colour helpers */
-    .app-deadline--urgent { color: #d4351c; font-weight: 700; }
-    .app-deadline--soon   { color: #594d00; font-weight: 700; }
-    .app-deadline--ok     { color: #005a30; }
-
-    /* Header: single-line logo | org name | pipe | service name layout */
-    .govuk-header__container { align-items: center; }
-    .app-header-home {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
-    }
-    .app-header-home:hover { text-decoration: none; }
-    .app-header-org {
-      font-size: 1.0625rem; font-weight: 700; color: #fff;
-      white-space: nowrap;
-    }
-    .app-header-pipe {
-      font-size: 1.0625rem; font-weight: 300; color: rgba(255,255,255,.5);
-      margin: 0 6px; user-select: none;
-    }
-    .app-header-service {
-      font-size: 1.0625rem; font-weight: 400; color: #fff;
-      white-space: nowrap;
-    }
-    .app-header-user {
-      margin-left: auto; font-size: 0.875rem; color: rgba(255,255,255,.75);
-      white-space: nowrap;
-    }
-
-    /* Inter font throughout — GDS Transport unavailable from CDN */
-    body, .govuk-body, .govuk-heading-xl, .govuk-heading-l,
-    .govuk-heading-m, .govuk-heading-s, .govuk-table, .govuk-button,
-    .govuk-label, .govuk-hint, .govuk-tag, .govuk-phase-banner,
-    .govuk-header, .govuk-service-navigation, .govuk-footer {
-      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
-    }
-
-    /* Active item in service navigation */
-    .govuk-service-navigation__item--active .govuk-service-navigation__link {
-      font-weight: 700;
-      text-decoration: underline;
-      text-decoration-color: #fff;
-      text-decoration-thickness: 3px;
-      text-underline-offset: 4px;
-    }
-
-    /* Timeline */
-    .app-timeline__item { display: flex; gap: 12px; padding-bottom: 14px; position: relative; }
-    .app-timeline__item:not(:last-child)::before {
-      content: ''; position: absolute; left: 11px; top: 24px; bottom: 0;
-      width: 2px; background: #b1b4b6;
-    }
-    .app-timeline__marker {
-      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; position: relative; z-index: 1;
-    }
-    .app-timeline__marker--green  { background: #cce2d8; color: #005a30; }
-    .app-timeline__marker--blue   { background: #d2e2f1; color: #003078; }
-    .app-timeline__marker--yellow { background: #fdf7da; color: #594d00; }
-    .app-timeline__event  { font-size: 1rem; }
-    .app-timeline__time   { font-size: 0.875rem; color: #505a5f; }
-
-    /* GDS progress bar (reuse for compliance) */
-    .app-progress-bar { height: 8px; background: #b1b4b6; margin-bottom: 4px; }
-    .app-progress-bar__fill { height: 100%; background: #00703c; }
-    .app-progress-bar__fill--red    { background: #d4351c; }
-    .app-progress-bar__fill--yellow { background: #fd0; }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAIRS Response Agent — Greenfields Housing</title>
+  
 </head>
 <body class="govuk-template__body">
   <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
@@ -170,28 +21,32 @@
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
   <!-- ═══ HEADER ═══════════════════════════════════ -->
-  <header class="govuk-header" data-module="govuk-header">
-    <div class="govuk-header__container govuk-width-container" style="display:flex;align-items:center;padding-top:12px;padding-bottom:12px">
-      <a href="#" class="app-header-home" onclick="showScreen('dashboard');return false;" aria-label="Greenfields Housing — STAIRS Response Agent — go to overview">
-        <!-- House / building logo -->
-        <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 42" height="38" width="33" aria-hidden="true">
-          <g fill="#ffffff">
-            <rect x="4"  y="12" width="28" height="30"/>
-            <polygon points="18,1 33,12 3,12"/>
-            <rect x="8"  y="18" width="7" height="7" fill="#0b0c0c"/>
-            <rect x="21" y="18" width="7" height="7" fill="#0b0c0c"/>
-            <rect x="8"  y="29" width="7" height="6" fill="#0b0c0c"/>
-            <rect x="21" y="29" width="7" height="6" fill="#0b0c0c"/>
-            <rect x="14" y="32" width="8" height="10" fill="#0b0c0c"/>
-          </g>
-        </svg>
-        <span class="app-header-org">Greenfields Housing</span>
-        <span class="app-header-pipe" aria-hidden="true">|</span>
-        <span class="app-header-service">STAIRS Response Agent</span>
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+
+    <div class="govuk-header__logo">
+
+      <!--  Clickable home icon -->
+      <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
+        <img src="images/white-home.png" alt="Home" class="app-home-icon">
       </a>
-      <span class="app-header-user">Sarah Barnes</span>
+
+      <span class="govuk-header__link govuk-header__service-name">Greenfields Housing</span>
+      <span class="app-header-divider">|</span>
+
+   <div class="govuk-header__content">
+      <span class="govuk-header__link govuk-header__service-name">STAIRS Response Agent</span>
+
+      <nav aria-label="Account" class="govuk-header__navigation app-account-nav">
+        <div class="app-profile">
+          <img src="images/user-image.png" alt="Sarah Barnes" class="app-profile__image">
+          <span class="govuk-header__link">Sarah Barnes</span>
+        </div>
+      </nav>
     </div>
-  </header>
+
+  </div>
+</header>
 
   <!-- ═══ SERVICE NAVIGATION ════════════════════════ -->
   <section aria-label="Service information">
@@ -210,9 +65,6 @@
             </li>
             <li class="govuk-service-navigation__item" data-screen="casefile">
               <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('casefile');return false;">Property Case File</a>
-            </li>
-            <li class="govuk-service-navigation__item" data-screen="chat">
-              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('chat');return false;">Ask the Agent</a>
             </li>
           </ul>
         </div>
@@ -235,6 +87,7 @@
   <!-- ═══ MAIN ══════════════════════════════════════ -->
   <div class="govuk-width-container">
     <main class="govuk-main-wrapper" id="main-content">
+
 
       <!-- ─── DASHBOARD ────────────────────────────── -->
       <div class="app-screen app-screen--active" id="screen-dashboard">
@@ -290,58 +143,33 @@
             </div>
           </div>
         </div>
+        
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Active STAIRS Requests</h5>
+        <p class="card-text">Click the button below to view the active STAIRS requests. You can quick view a number or view all.</p>
+        <button type="button" onclick="openStairsRequestModal()" class="btn btn-primary">Quick view</button>
+        <a href="#" onclick="showScreen('requests');return false;" class="btn btn-primary">View all</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Properties requiring attention</h5>
+        <p class="card-text">Click the button below to view properties requiring attention. You can quick view a number or view all.</p>
+        <button type="button" onclick="openComplianceModal()" class="btn btn-primary">Quick view</button>
+        <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+      </div>
+    </div>
+  </div>
+</div>       
 
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Active STAIRS requests</h2>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header" scope="col">Reference</th>
-                  <th class="govuk-table__header" scope="col">Property</th>
-                  <th class="govuk-table__header" scope="col">Type</th>
-                  <th class="govuk-table__header" scope="col">Deadline</th>
-                  <th class="govuk-table__header" scope="col">Status</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body" id="tbody-dashboard-stairs">
-              </tbody>
-            </table>
-            <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('requests');return false;">View all STAIRS requests</a></p>
+        
 
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Properties requiring attention</h2>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header" scope="col">Address</th>
-                  <th class="govuk-table__header" scope="col">Issue</th>
-                  <th class="govuk-table__header" scope="col">Status</th>
-                  <th class="govuk-table__header" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">14 Birchwood Avenue, Manchester</a></td>
-                  <td class="govuk-table__cell">Gas safety certificate expired</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">View case file</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">8 Maple Court, Salford</a></td>
-                  <td class="govuk-table__cell">Fire alarm inspection overdue</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">3 Elm Street, Rochdale</a></td>
-                  <td class="govuk-table__cell">Electrical inspection due</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">At risk</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('compliance');return false;">View all 7 non-compliant properties</a></p>
-          </div>
+           
 
           <div class="govuk-grid-column-one-third">
             <h2 class="govuk-heading-m">Recent activity</h2>
@@ -980,62 +808,7 @@
         </div>
       </div>
 
-      <!-- ─── CHAT ─────────────────────────────────── -->
-      <div class="app-screen" id="screen-chat">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">Ask the agent</h1>
-            <p class="govuk-body">Search across all property records, compliance data, repair history, and documents using natural language.</p>
 
-            <div class="app-chat-messages" id="chat-messages">
-              <div class="app-chat-msg">
-                <div class="app-chat-avatar app-chat-avatar--bot">AI</div>
-                <div class="app-chat-bubble app-chat-bubble--bot">
-                  Hello Sarah. I can search across all property records, compliance data, repair history, and documents. What would you like to know?
-                </div>
-              </div>
-            </div>
-
-            <div class="app-chips" id="chips">
-              <button class="app-chip" onclick="sendChip(this)">Which properties are non-compliant?</button>
-              <button class="app-chip" onclick="sendChip(this)">Show overdue inspections</button>
-              <button class="app-chip" onclick="sendChip(this)">Find all boiler repair records</button>
-              <button class="app-chip" onclick="sendChip(this)">List open FOI requests</button>
-              <button class="app-chip" onclick="sendChip(this)">Properties with damp issues</button>
-            </div>
-
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="chat-input">Your question</label>
-              <textarea class="govuk-textarea" id="chat-input" rows="3"
-                placeholder="Ask about properties, compliance, inspections, repairs, documents…"
-                onkeydown="handleKey(event)"></textarea>
-            </div>
-            <div class="govuk-button-group">
-              <button class="govuk-button" onclick="sendMessage()" data-module="govuk-button">Send</button>
-              <button class="govuk-button govuk-button--secondary" onclick="clearChat()" data-module="govuk-button">Clear chat</button>
-            </div>
-          </div>
-
-          <div class="govuk-grid-column-one-third">
-            <div class="govuk-inset-text">
-              <h2 class="govuk-heading-s">What you can ask</h2>
-              <ul class="govuk-list govuk-list--bullet govuk-body-s">
-                <li>Compliance status of any property</li>
-                <li>Overdue inspections and gas safety</li>
-                <li>Repair history and contractor details</li>
-                <li>Open or overdue FOI / STAIRS requests</li>
-                <li>Documents: boiler reports, fire safety, damp records</li>
-                <li>Tenant and tenancy information</li>
-              </ul>
-              <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m">
-              <p class="govuk-body-s govuk-!-margin-bottom-0">Results combine structured database records with AI semantic search across all uploaded documents.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </div>
 
   <!-- ═══ FOOTER ════════════════════════════════════ -->
   <footer class="govuk-footer">
@@ -1066,217 +839,355 @@
     initAll()
   </script>
 
-  <script>
-    // ── Screen navigation ──────────────────────────
-    function showScreen(id) {
-      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('app-screen--active'));
-      const el = document.getElementById('screen-' + id);
-      if (el) el.classList.add('app-screen--active');
+<!-- Chat Button (sticky)-->
+<button class="chat-icon" onclick="openChat()">
+  <img src="images/chatbot-icon.png" alt="Chat">
+  <span>Ask the Agent</span>
+</button>
 
-      document.querySelectorAll('#nav-list .govuk-service-navigation__item').forEach(item => {
-        item.classList.remove('govuk-service-navigation__item--active');
-        if (item.dataset.screen === id) item.classList.add('govuk-service-navigation__item--active');
-      });
+<!-- Chat Popup -->
+<div class="chat-popup" id="chatPopup">
 
-      window.scrollTo(0, 0);
-    }
+  <div class="chat-header">
+    <h3>Chat</h3>
+    <button type="button" onclick="closeChat()">x</button>
+  </div>
 
-    // ── Chat ───────────────────────────────────────
-    const mockResponses = {
-      "which properties are non-compliant": `<strong>7 non-compliant properties</strong> found across the portfolio:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Address</th><th class="govuk-table__header">Issue</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Gas safety certificate expired (547 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">8 Maple Court</td><td class="govuk-table__cell">Fire alarm inspection overdue (426 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">19 Primrose Way</td><td class="govuk-table__cell">Gas safety certificate expired (517 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">+ 4 more</td><td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('compliance');return false;">View full compliance list</a></td></tr>
-        </tbody></table>`,
-      "show overdue inspections": `<strong>14 properties</strong> have not been inspected in over 12 months.<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Address</th><th class="govuk-table__header">Days overdue</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">4 Thornton Gardens</td><td class="govuk-table__cell">578 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">547 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">19 Primrose Way</td><td class="govuk-table__cell">517 days</td></tr>
-        </tbody></table>`,
-      "find all boiler repair records": `Found <strong>3 boiler-related repair records</strong> across database and documents:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Property</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Contractor</th><th class="govuk-table__header">Cost</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Mar 2024</td><td class="govuk-table__cell">Patel Plumbing Ltd</td><td class="govuk-table__cell">£1,840</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">8 Maple Court</td><td class="govuk-table__cell">Jan 2024</td><td class="govuk-table__cell">CityGas Ltd</td><td class="govuk-table__cell">£180</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">22 Heather Close</td><td class="govuk-table__cell">Oct 2023</td><td class="govuk-table__cell">Patel Plumbing Ltd</td><td class="govuk-table__cell">£420</td></tr>
-        </tbody></table><br>
-        Also matched document: <strong>boiler_repair_report_2024-03.txt</strong> (score 0.94)`,
-      "list open foi requests": `<strong>4 active STAIRS / FOI requests</strong> currently open:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Reference</th><th class="govuk-table__header">Due date</th><th class="govuk-table__header">Days remaining</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td><td class="govuk-table__cell">8 May 2025</td><td class="govuk-table__cell" style="color:#d4351c;font-weight:700">3 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0038</td><td class="govuk-table__cell">13 May 2025</td><td class="govuk-table__cell">8 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0035</td><td class="govuk-table__cell">20 May 2025</td><td class="govuk-table__cell">15 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0031</td><td class="govuk-table__cell">26 May 2025</td><td class="govuk-table__cell">21 days</td></tr>
-        </tbody></table>`,
-      "properties with damp issues": `Found <strong>2 properties</strong> with damp or mould records, plus 1 document match:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Property</th><th class="govuk-table__header">Details</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Damp treatment Aug 2023 — ProDamp Solutions — resolved</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">2 Ash Lane</td><td class="govuk-table__cell">Assessment overdue — no treatment on record</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">Document match</td><td class="govuk-table__cell">damp_mould_risk_note.txt — relevance score 0.91</td></tr>
-        </tbody></table>`
-    };
+  <!-- Start screen with examples-->
+  <div class="chat-start-screen" id="chatStartScreen">
+    <h4>Welcome to the Greenfields Housing Chat Agent</h4>
 
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const text = input.value.trim();
-      if (!text) return;
-      appendMsg(text, 'user');
-      input.value = '';
-      document.getElementById('chips').style.display = 'none';
-      setTimeout(() => {
-        const key = text.toLowerCase().replace(/[?!.]/g, '').trim();
-        const resp = mockResponses[key] ||
-          `I searched across all property records and documents for "<strong>${text}</strong>".<br><br>
-          Found <strong>3 relevant results</strong> combining database records and document matches.
-          Would you like me to compile a full case file or filter by a specific property?`;
-        appendMsg(resp, 'bot');
-      }, 800);
-    }
+    <p>What can you ask?</p>
 
-    function appendMsg(html, role) {
-      const container = document.getElementById('chat-messages');
-      const div = document.createElement('div');
-      div.className = 'app-chat-msg' + (role === 'user' ? ' app-chat-msg--user' : '');
-      const initials = role === 'user' ? 'SB' : 'AI';
-      const avClass = role === 'user' ? 'app-chat-avatar--user' : 'app-chat-avatar--bot';
-      div.innerHTML = `<div class="app-chat-avatar ${avClass}">${initials}</div>
-                       <div class="app-chat-bubble app-chat-bubble--${role}">${html}</div>`;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-    }
+    <ul>
+      <li>The compliance status of any property</li>
+      <li>Overdue inspections and gas safety</li>
+      <li>Repair history and contractor details</li>
+      <li>Open or overdue FOI / STAIRS requests</li>
+      <li>Documents: boiler reports, fire safety, damp records</li>
+      <li>Tenant and tenancy information</li>
+    </ul>
 
-    function sendChip(el) {
-      document.getElementById('chat-input').value = el.textContent.trim();
-      sendMessage();
-    }
+    <p>The results combine structured database records with AI semantic search across uploaded documents.</p>
 
-    function handleKey(e) {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    }
+    <!-- Button to start chat with agent -->
+    <button type="button" class="govuk-button app-start-chat-btn" onclick="startChat()">
+      <span>Start chat</span>
+      <img src="images/arrow-image.png" alt="Arrow" class="app-start-chat-arrow">
+    </button>
+  </div>
 
-    // ── STAIRS requests data fetching ──────────────
-    function fmtDate(iso) {
-      if (!iso) return '—';
-      const d = new Date(iso + 'T00:00:00');
-      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-    }
+  <!-- Chat screen -->
+  <div class="chat-screen" id="chatScreen" style="display: none;">
 
-    function daysRemaining(iso) {
-      const due = new Date(iso + 'T00:00:00');
-      const today = new Date(); today.setHours(0, 0, 0, 0);
-      return Math.round((due - today) / 86400000);
-    }
+    <div class="chat-body">
+      <p>
+        <strong>Agent:</strong>
+        Hello Sarah. I can search across all property records, compliance data, repair history, and documents using natural language. What would you like to know?
+      </p>
 
-    function deadlineClass(days) {
-      if (days <= 3) return 'app-deadline--urgent';
-      if (days <= 7) return 'app-deadline--soon';
-      return 'app-deadline--ok';
-    }
+      <!-- Suggestion tabs within chat-->
+      <div class="app-chips" id="chips">
+        <button type="button" class="app-chip" onclick="sendChip(this)">Which properties are non-compliant?</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Show overdue inspections</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Find all boiler repair records</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">List open FOI requests</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Properties with damp issues</button>
+      </div>
 
-    function statusTag(status) {
-      const colours = {
-        'In review': 'govuk-tag--purple',
-        'Discovering': 'govuk-tag--light-blue',
-        'Redacting': 'govuk-tag--yellow',
-        'Released': 'govuk-tag--green',
-      };
-      const cls = colours[status] || '';
-      return `<strong class="govuk-tag ${cls}">${status}</strong>`;
-    }
+      <div id="chat-messages"></div>
+    </div>
+      <div class="chat-footer">
 
-    function buildDashboardRow(r) {
-      const days = daysRemaining(r.due_date);
-      const cls = deadlineClass(days);
-      const deadlineText = `${fmtDate(r.due_date)} (${days} day${days === 1 ? '' : 's'})`;
-      return `<tr class="govuk-table__row">
-        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
-        <td class="govuk-table__cell">${r.address_line_1}</td>
-        <td class="govuk-table__cell">${r.request_type || '—'}</td>
-        <td class="govuk-table__cell ${cls}">${deadlineText}</td>
-        <td class="govuk-table__cell">${statusTag(r.status)}</td>
-      </tr>`;
-    }
+        <textarea id="chat-input"placeholder="Type your message..."></textarea>
 
-    function buildRequestsRow(r) {
-      const released = !!r.response_date;
-      const days = released ? null : daysRemaining(r.due_date);
-      const cls = days !== null ? deadlineClass(days) : '';
-      const deadlineText = days !== null
-        ? `${fmtDate(r.due_date)} (${days} day${days === 1 ? '' : 's'})`
-        : fmtDate(r.due_date);
-      const rowStyle = released ? ' style="color:#505a5f"' : '';
-      const actionLabel = (!released && r.status === 'In review') ? 'Review' : 'View';
-      return `<tr class="govuk-table__row"${rowStyle}>
-        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
-        <td class="govuk-table__cell">${r.first_name} ${r.last_name}</td>
-        <td class="govuk-table__cell">${r.address_line_1}</td>
-        <td class="govuk-table__cell">${r.request_type || '—'}</td>
-        <td class="govuk-table__cell">${fmtDate(r.request_date)}</td>
-        <td class="govuk-table__cell ${cls}">${deadlineText}</td>
-        <td class="govuk-table__cell">${statusTag(r.status)}</td>
-        <td class="govuk-table__cell"><a class="govuk-link" href="#">${actionLabel}</a></td>
-      </tr>`;
-    }
+        <!--Buttons to send or clear messsage in chat-->
+        <div class="chat-footer-buttons">
 
-    async function loadStairsRequests() {
-      try {
-        const res = await fetch('/stairs-requests');
-        if (!res.ok) return;
-        const requests = await res.json();
+          <button type="button" class="chat-send-btn" onclick="sendMessage()">Send</button>
 
-        const active = requests.filter(r => !r.response_date);
-        const dueWithin7 = active.filter(r => daysRemaining(r.due_date) <= 7);
-        const released30 = requests.filter(r => {
-          if (!r.response_date) return false;
-          const d = new Date(r.response_date + 'T00:00:00');
-          const today = new Date(); today.setHours(0, 0, 0, 0);
-          return (today - d) / 86400000 <= 30;
-        });
+          <button type="button" class="chat-clear-btn" onclick="clearChat()">Clear chat</button>
 
-        const statActiveDash = document.getElementById('stat-active-stairs');
-        if (statActiveDash) statActiveDash.textContent = active.length;
+        </div>
 
-        const statTotal = document.getElementById('stat-requests-total');
-        if (statTotal) statTotal.textContent = active.length;
-        const statDue7 = document.getElementById('stat-requests-due7');
-        if (statDue7) statDue7.textContent = dueWithin7.length;
-        const statReleased = document.getElementById('stat-requests-released');
-        if (statReleased) statReleased.textContent = released30.length;
+      </div>
 
-        const dashTbody = document.getElementById('tbody-dashboard-stairs');
-        if (dashTbody) dashTbody.innerHTML = active.slice(0, 4).map(buildDashboardRow).join('');
+  </div>
 
-        const reqTbody = document.getElementById('tbody-requests-stairs');
-        if (reqTbody) reqTbody.innerHTML = requests.map(buildRequestsRow).join('');
-      } catch (e) {
-        console.error('Failed to load STAIRS requests:', e);
-      }
-    }
+</div>
+</div>
 
-    document.addEventListener('DOMContentLoaded', loadStairsRequests);
+<!-- Modal for chat results-->
+<div id="resultsModal" class="results-modal">
+  <div class="results-modal__content">
+    <div class="results-modal__header">
+      <h3 id="resultsModalTitle">Results</h3>
+      <button type="button" onclick="closeResultsModal()">x</button>
+    </div>
 
-    function clearChat() {
-      document.getElementById('chat-messages').innerHTML = `
-        <div class="app-chat-msg">
-          <div class="app-chat-avatar app-chat-avatar--bot">AI</div>
-          <div class="app-chat-bubble app-chat-bubble--bot">
-            Hello Sarah. I can search across all property records, compliance data, repair history, and documents. What would you like to know?
-          </div>
-        </div>`;
-      document.getElementById('chips').style.display = 'flex';
-    }
-  </script>
+    <div id="resultsModalBody" class="results-modal__body"></div>
+  </div>
+</div>
+
+<!-- Stairs requests modal for overview page-->
+<div id="stairsRequestModal" class="table-modal">
+  <div class="table-modal-content">
+
+    <div class="table-modal-header">
+      <h3>Active STAIRS requests</h3>
+
+      <button type="button" onclick="closeStairsRequestModal()">x</button>
+    </div>
+
+    <div class="table-modal-body">
+
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Reference</th>
+            <th class="govuk-table__header" scope="col">Property</th>
+            <th class="govuk-table__header" scope="col">Type</th>
+            <th class="govuk-table__header" scope="col">Deadline</th>
+            <th class="govuk-table__header" scope="col">Status</th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link"
+                 href="#"
+                 onclick="showScreen('request-detail'); closeStairsRequestModal(); return false;">
+                FOI-2025-0041
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">14 Birchwood Ave</td>
+
+            <td class="govuk-table__cell">Repairs history</td>
+
+            <td class="govuk-table__cell app-deadline--urgent">
+              8 May 2025 (3 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--purple">
+                In review
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0038
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">8 Maple Court</td>
+
+            <td class="govuk-table__cell">Safety inspections</td>
+
+            <td class="govuk-table__cell app-deadline--soon">
+              13 May 2025 (8 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--light-blue">
+                Discovering
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0035
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">22 Heather Close</td>
+
+            <td class="govuk-table__cell">Contractor records</td>
+
+            <td class="govuk-table__cell app-deadline--ok">
+              20 May 2025 (15 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--yellow">
+                Redacting
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0031
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">3 Elm Street</td>
+
+            <td class="govuk-table__cell">Tenancy docs</td>
+
+            <td class="govuk-table__cell app-deadline--ok">
+              26 May 2025 (21 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--light-blue">
+                Discovering
+              </strong>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+      <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+    </div>
+
+  </div>
+</div>
+<!-- Compliance modal-->
+
+<div id="complianceModal" class="table-modal">
+
+  <div class="table-modal-content">
+
+    <div class="table-modal-header">
+
+      <h3>Properties requiring attention</h3>
+
+      <button type="button" onclick="closeComplianceModal()">
+        ×
+      </button>
+
+    </div>
+
+    <div class="table-modal-body">
+
+      <table class="govuk-table">
+
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header">Address</th>
+            <th class="govuk-table__header">Issue</th>
+            <th class="govuk-table__header">Status</th>
+            <th class="govuk-table__header"></th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+          <tr class="govuk-table__row">
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link"
+                 href="#"
+                 onclick="showScreen('casefile'); closeComplianceModal(); return false;">
+
+                14 Birchwood Avenue, Manchester
+
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">
+              Gas safety certificate expired
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--red">
+                Non-compliant
+              </strong>
+            </td>
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link"
+                 href="#"
+                 onclick="showScreen('casefile'); closeComplianceModal(); return false;">
+
+                View case file
+
+              </a>
+            </td>
+
+          </tr>
+
+          <tr class="govuk-table__row">
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                8 Maple Court, Salford
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">
+              Fire alarm inspection overdue
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--red">
+                Non-compliant
+              </strong>
+            </td>
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                View case file
+              </a>
+            </td>
+
+          </tr>
+
+          <tr class="govuk-table__row">
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                3 Elm Street, Rochdale
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">
+              Electrical inspection due
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--yellow">
+                At risk
+              </strong>
+            </td>
+
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                View case file
+              </a>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <p class="govuk-body">
+
+
+         <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+
+        </a>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+  <!-- Script to handle Javascript-->
+  <script src="js/mockResponses.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
