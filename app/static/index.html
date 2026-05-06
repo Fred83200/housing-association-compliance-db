@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>STAIRS Response Agent — Greenfields Housing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.css" />
   <style>
     /* Custom styles on top of GDS — minimal, only where GDS has no built-in pattern */
@@ -96,11 +99,21 @@
     .app-deadline--soon   { color: #594d00; font-weight: 700; }
     .app-deadline--ok     { color: #005a30; }
 
-    /* Active nav item highlight for service navigation */
-    .govuk-service-navigation__item--active > a {
+    /* Inter font throughout — GDS Transport unavailable from CDN */
+    body, .govuk-body, .govuk-heading-xl, .govuk-heading-l,
+    .govuk-heading-m, .govuk-heading-s, .govuk-table, .govuk-button,
+    .govuk-label, .govuk-hint, .govuk-tag, .govuk-phase-banner,
+    .govuk-header, .govuk-service-navigation, .govuk-footer {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
+    }
+
+    /* Active item in service navigation */
+    .govuk-service-navigation__item--active .govuk-service-navigation__link {
       font-weight: 700;
-      border-bottom: 4px solid #fd0;
-      padding-bottom: 2px;
+      text-decoration: underline;
+      text-decoration-color: #fff;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
     }
 
     /* Timeline */
@@ -136,20 +149,18 @@
   <header class="govuk-header" data-module="govuk-header">
     <div class="govuk-header__container govuk-width-container">
       <div class="govuk-header__logo">
-        <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard'); return false;">
-          <span class="govuk-header__logotype">
-            <span class="govuk-header__product-name">Greenfields Housing Association</span>
-          </span>
+        <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
+          <span class="govuk-header__logotype">Greenfields Housing</span>
         </a>
       </div>
       <div class="govuk-header__content">
-        <a href="#" class="govuk-header__link govuk-header__service-name" onclick="showScreen('dashboard'); return false;">
+        <a href="#" class="govuk-header__link govuk-header__service-name" onclick="showScreen('dashboard');return false;">
           STAIRS Response Agent
         </a>
-        <nav aria-label="Top navigation" class="govuk-header__navigation">
+        <nav aria-label="Account" class="govuk-header__navigation">
           <ul class="govuk-header__navigation-list">
             <li class="govuk-header__navigation-item">
-              <span class="govuk-header__navigation-item-link" style="color:#fff;font-size:.875rem">Sarah Barnes &nbsp;|&nbsp; Staff</span>
+              <a class="govuk-header__link" href="#">Sarah Barnes</a>
             </li>
           </ul>
         </nav>
@@ -160,21 +171,17 @@
   <!-- ═══ SERVICE NAVIGATION ════════════════════════ -->
   <section aria-label="Service information">
     <div class="govuk-width-container">
-      <nav class="govuk-service-navigation" data-module="govuk-service-navigation" id="service-nav">
+      <nav class="govuk-service-navigation" data-module="govuk-service-navigation">
         <div class="govuk-service-navigation__container">
           <ul class="govuk-service-navigation__list" id="nav-list">
             <li class="govuk-service-navigation__item govuk-service-navigation__item--active" data-screen="dashboard">
               <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('dashboard');return false;">Overview</a>
             </li>
             <li class="govuk-service-navigation__item" data-screen="requests">
-              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('requests');return false;">
-                STAIRS Requests <strong class="govuk-tag govuk-tag--red" style="margin-left:6px;vertical-align:middle">4</strong>
-              </a>
+              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('requests');return false;">STAIRS Requests</a>
             </li>
             <li class="govuk-service-navigation__item" data-screen="compliance">
-              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('compliance');return false;">
-                Compliance <strong class="govuk-tag govuk-tag--red" style="margin-left:6px;vertical-align:middle">7</strong>
-              </a>
+              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('compliance');return false;">Compliance</a>
             </li>
             <li class="govuk-service-navigation__item" data-screen="casefile">
               <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('casefile');return false;">Property Case File</a>
@@ -232,28 +239,28 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Non-compliant properties</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">7</div>
+              <div class="app-stat-card__value">7</div>
               <div class="app-stat-card__detail govuk-body-s">↑ 2 since last month</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Overdue inspections</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">14</div>
+              <div class="app-stat-card__value">14</div>
               <div class="app-stat-card__detail govuk-body-s">↑ 3 since last month</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Active STAIRS requests</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">4</div>
+              <div class="app-stat-card__value">4</div>
               <div class="app-stat-card__detail govuk-body-s">2 due within 7 days</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--green">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Portfolio compliance rate</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">91%</div>
+              <div class="app-stat-card__value">91%</div>
               <div class="app-stat-card__detail govuk-body-s">↑ up from 88% last quarter</div>
             </div>
           </div>
@@ -390,25 +397,25 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
               <div class="app-stat-card__label govuk-body-s">Total active</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">4</div>
+              <div class="app-stat-card__value">4</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s">Due within 7 days</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">2</div>
+              <div class="app-stat-card__value">2</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--green">
               <div class="app-stat-card__label govuk-body-s">Released (30 days)</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">12</div>
+              <div class="app-stat-card__value">12</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
               <div class="app-stat-card__label govuk-body-s">Avg. handling time</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">4.2 <span style="font-size:1.25rem;font-weight:400">days</span></div>
+              <div class="app-stat-card__value">4.2 <span style="font-size:1.25rem;font-weight:400">days</span></div>
             </div>
           </div>
         </div>
@@ -539,7 +546,7 @@
         </div>
 
         <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
+          <div class="govuk-grid-column-two-thirds">
 
             <h2 class="govuk-heading-m">Request details</h2>
             <dl class="govuk-summary-list">
@@ -577,13 +584,23 @@
               <p class="govuk-body">"I would like all records of repair works carried out at my property over the past 3 years, including contractor names, dates and costs."</p>
             </div>
 
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Documents discovered by AI agent</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-top-6">AI summary</h2>
+            <p class="govuk-body">4 documents found relating to repair activity at <strong>14 Birchwood Avenue</strong> between April 2022 and August 2024.</p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>Boiler replaced March 2024 by <strong>Patel Plumbing Ltd</strong> — cost £1,840</li>
+              <li>Electrical inspection passed November 2023 — <strong>Sigma Electrical</strong></li>
+              <li>3 additional minor repair jobs logged via contractor portal</li>
+              <li>1 tenant call note contains third-party name requiring redaction</li>
+            </ul>
+            <p class="govuk-body-s govuk-!-margin-bottom-6" style="color:#505a5f">Discovery completed in 14 seconds. Estimated 18 hours of manual search avoided.</p>
+
+            <h2 class="govuk-heading-m">Documents discovered by AI agent</h2>
             <table class="govuk-table">
               <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                   <th class="govuk-table__header" scope="col">Document</th>
                   <th class="govuk-table__header" scope="col">Type</th>
-                  <th class="govuk-table__header" scope="col">Match</th>
+                  <th class="govuk-table__header" scope="col">Relevance</th>
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
@@ -605,48 +622,14 @@
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell">tenant_call_note_2024-08.txt</td>
                   <td class="govuk-table__cell">Unstructured</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">0.61</strong></td>
+                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">0.61 — review</strong></td>
                 </tr>
               </tbody>
             </table>
 
-          </div>
-
-          <div class="govuk-grid-column-one-half">
-
-            <h2 class="govuk-heading-m">AI summary</h2>
-            <div class="govuk-body">
-              <p>4 documents found relating to repair activity at <strong>14 Birchwood Avenue</strong> between April 2022 and August 2024.</p>
-              <ul class="govuk-list govuk-list--bullet">
-                <li>Boiler replaced March 2024 by <strong>Patel Plumbing Ltd</strong> — cost £1,840</li>
-                <li>Electrical inspection passed November 2023 — <strong>Sigma Electrical</strong></li>
-                <li>3 additional minor repair jobs logged via contractor portal</li>
-                <li>1 tenant call note contains third-party name requiring redaction</li>
-              </ul>
-              <p class="govuk-body-s" style="color:#505a5f">Discovery completed in 14 seconds. Estimated 18 hours of manual search avoided.</p>
-            </div>
-
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Redacted response preview</h2>
-            <p class="govuk-hint">Auto-redacted PII shown in black. Review before approving release.</p>
-
-            <div style="border:1px solid #b1b4b6;padding:20px;background:#f8f8f8;font-family:Georgia,serif;font-size:1rem;line-height:1.75">
-              <p>Dear Mr Whitfield,</p>
-              <br/>
-              <p>In response to your STAIRS request FOI-2025-0041, please find below a summary of repair records for your property at 14 Birchwood Avenue.</p>
-              <br/>
-              <p><strong>Repair records (2022–2024):</strong></p>
-              <p>Mar 2024 — Boiler replacement. Contractor: Patel Plumbing Ltd. Cost: £1,840. Authorised by <span class="app-redacted">■■■■ ■■■■■■</span>.</p>
-              <p>Nov 2023 — Electrical inspection. Contractor: Sigma Electrical. Result: Pass. Signed off by <span class="app-redacted">■■■■■■■ ■■■■■</span>.</p>
-              <p>Aug 2024 — Call note logged regarding concern raised by <span class="app-redacted">■■■■■■■■■■■</span> (third party, redacted under GDPR).</p>
-            </div>
-
-            <div class="govuk-button-group govuk-!-margin-top-4">
-              <button class="govuk-button" data-module="govuk-button">
-                Approve and release
-              </button>
-              <button class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                Edit redactions
-              </button>
+            <div class="govuk-button-group govuk-!-margin-top-6">
+              <button class="govuk-button" data-module="govuk-button">Approve and release</button>
+              <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Edit redactions</button>
               <a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">View full case file</a>
             </div>
 
@@ -670,25 +653,25 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s">Non-compliant</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">7</div>
+              <div class="app-stat-card__value">7</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
               <div class="app-stat-card__label govuk-body-s">Overdue inspections</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">14</div>
+              <div class="app-stat-card__value">14</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s">Gas safety expired</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">3</div>
+              <div class="app-stat-card__value">3</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
               <div class="app-stat-card__label govuk-body-s">Inspections scheduled</div>
-              <div class="app-stat-card__value govuk-heading-xl govuk-!-margin-bottom-0">5</div>
+              <div class="app-stat-card__value">5</div>
             </div>
           </div>
         </div>
