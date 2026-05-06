@@ -20,27 +20,34 @@
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
   <!-- ═══ HEADER ═══════════════════════════════════ -->
-  <header class="govuk-header" data-module="govuk-header">
-    <div class="govuk-header__container govuk-width-container">
-      <div class="govuk-header__logo">
-        <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
-          <span class="govuk-header__logotype">Greenfields Housing</span>
-        </a>
-      </div>
-      <div class="govuk-header__content">
-        <a href="#" class="govuk-header__link govuk-header__service-name" onclick="showScreen('dashboard');return false;">
-          STAIRS Response Agent
-        </a>
-        <nav aria-label="Account" class="govuk-header__navigation">
-          <ul class="govuk-header__navigation-list">
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#">Sarah Barnes</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+<header class="govuk-header" data-module="govuk-header">
+  <div class="govuk-header__container govuk-width-container">
+
+    <div class="govuk-header__logo">
+
+      <!--  Clickable home icon -->
+      <a href="#"
+        class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
+        <img src="images/white-home.png" alt="Home" class="app-home-icon">
+      </a>
+
+      <span class="app-logo">Greenfields Housing</span>
+
     </div>
-  </header>
+
+    <div class="govuk-header__content">
+      <span class="govuk-header__link govuk-header__service-name">STAIRS Response Agent</span>
+
+      <nav aria-label="Account" class="govuk-header__navigation app-account-nav">
+        <div class="app-profile">
+          <img src="images/user-image.png" alt="Sarah Barnes" class="app-profile__image">
+          <span class="govuk-header__link">Sarah Barnes</span>
+        </div>
+      </nav>
+    </div>
+
+  </div>
+</header>
 
   <!-- ═══ SERVICE NAVIGATION ════════════════════════ -->
   <section aria-label="Service information">
@@ -1003,9 +1010,10 @@
     import { initAll } from 'https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.js'
     initAll()
   </script>
+
 <!-- Sticky Chat Button -->
 <button class="chat-icon" onclick="openChat()">
-  <img src="images/chat-icon.png" alt="Chat">
+  <img src="images/chatbot-icon.png" alt="Chat">
   <span>Chat</span>
 </button>
 

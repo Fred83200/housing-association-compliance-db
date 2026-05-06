@@ -130,6 +130,7 @@
     .app-progress-bar__fill--yellow { background: #fd0; }
 
     {box-sizing: border-box;}
+    
 /* Sticky chat icon */
 .chat-icon {
   position: fixed;
@@ -225,4 +226,60 @@
   background-color: #005eb8;
   color: white;
   cursor: pointer;
+}
+
+.govuk-header__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.app-account-nav {
+  margin-left: auto;
+}
+
+.app-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-profile__image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.app-logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+
+  letter-spacing: -1px;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+}
+
+.govuk-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-home-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.app-logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+
+  letter-spacing: -1px;
+  line-height: 1;
 }
