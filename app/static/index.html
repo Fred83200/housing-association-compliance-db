@@ -99,6 +99,30 @@
     .app-deadline--soon   { color: #594d00; font-weight: 700; }
     .app-deadline--ok     { color: #005a30; }
 
+    /* Header: single-line logo | org name | pipe | service name layout */
+    .govuk-header__container { align-items: center; }
+    .app-header-home {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .app-header-home:hover { text-decoration: none; }
+    .app-header-org {
+      font-size: 1.0625rem; font-weight: 700; color: #fff;
+      white-space: nowrap;
+    }
+    .app-header-pipe {
+      font-size: 1.0625rem; font-weight: 300; color: rgba(255,255,255,.5);
+      margin: 0 6px; user-select: none;
+    }
+    .app-header-service {
+      font-size: 1.0625rem; font-weight: 400; color: #fff;
+      white-space: nowrap;
+    }
+    .app-header-user {
+      margin-left: auto; font-size: 0.875rem; color: rgba(255,255,255,.75);
+      white-space: nowrap;
+    }
+
     /* Inter font throughout — GDS Transport unavailable from CDN */
     body, .govuk-body, .govuk-heading-xl, .govuk-heading-l,
     .govuk-heading-m, .govuk-heading-s, .govuk-table, .govuk-button,
@@ -147,24 +171,25 @@
 
   <!-- ═══ HEADER ═══════════════════════════════════ -->
   <header class="govuk-header" data-module="govuk-header">
-    <div class="govuk-header__container govuk-width-container">
-      <div class="govuk-header__logo">
-        <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
-          <span class="govuk-header__logotype">Greenfields Housing</span>
-        </a>
-      </div>
-      <div class="govuk-header__content">
-        <a href="#" class="govuk-header__link govuk-header__service-name" onclick="showScreen('dashboard');return false;">
-          STAIRS Response Agent
-        </a>
-        <nav aria-label="Account" class="govuk-header__navigation">
-          <ul class="govuk-header__navigation-list">
-            <li class="govuk-header__navigation-item">
-              <a class="govuk-header__link" href="#">Sarah Barnes</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div class="govuk-header__container govuk-width-container" style="display:flex;align-items:center;padding-top:12px;padding-bottom:12px">
+      <a href="#" class="app-header-home" onclick="showScreen('dashboard');return false;" aria-label="Greenfields Housing — STAIRS Response Agent — go to overview">
+        <!-- House / building logo -->
+        <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 42" height="38" width="33" aria-hidden="true">
+          <g fill="#ffffff">
+            <rect x="4"  y="12" width="28" height="30"/>
+            <polygon points="18,1 33,12 3,12"/>
+            <rect x="8"  y="18" width="7" height="7" fill="#0b0c0c"/>
+            <rect x="21" y="18" width="7" height="7" fill="#0b0c0c"/>
+            <rect x="8"  y="29" width="7" height="6" fill="#0b0c0c"/>
+            <rect x="21" y="29" width="7" height="6" fill="#0b0c0c"/>
+            <rect x="14" y="32" width="8" height="10" fill="#0b0c0c"/>
+          </g>
+        </svg>
+        <span class="app-header-org">Greenfields Housing</span>
+        <span class="app-header-pipe" aria-hidden="true">|</span>
+        <span class="app-header-service">STAIRS Response Agent</span>
+      </a>
+      <span class="app-header-user">Sarah Barnes</span>
     </div>
   </header>
 
