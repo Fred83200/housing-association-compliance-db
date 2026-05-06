@@ -167,7 +167,23 @@
   </div>
 </div>       
 
-        
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m">Active STAIRS requests</h2>
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="col">Reference</th>
+                  <th class="govuk-table__header" scope="col">Property</th>
+                  <th class="govuk-table__header" scope="col">Type</th>
+                  <th class="govuk-table__header" scope="col">Deadline</th>
+                  <th class="govuk-table__header" scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body" id="tbody-dashboard-stairs">
+              </tbody>
+            </table>
+            <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('requests');return false;">View all STAIRS requests</a></p>
 
             <h2 class="govuk-heading-m govuk-!-margin-top-6">Properties requiring attention</h2>
             <table class="govuk-table">
@@ -203,46 +219,6 @@
             <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('compliance');return false;">View all 7 non-compliant properties</a></p>
           </div>
 
-          <div class="govuk-grid-column-one-third">
-            <h2 class="govuk-heading-m">Recent activity</h2>
-            <div class="app-timeline">
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--green">✓</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">FOI-2025-0029 — response released</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Today, 09:14</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--blue">AI</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">Agent completed discovery on FOI-2026-0041</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Today, 08:47</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--yellow">!</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">FOI-2025-0038 flagged for manual check</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Yesterday, 16:32</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--green">✓</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">5 properties re-inspected, now compliant</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Yesterday, 11:05</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--blue">AI</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">Auto-redaction complete for FOI-2025-0035</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">2 May, 14:20</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
