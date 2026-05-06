@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from app.query_router import answer_question, build_property_case_file
+from app.discovery_service import get_all_foi_requests
 
 app = FastAPI(
     title="Housing Compliance Discovery API",
@@ -22,6 +23,11 @@ def health_check() -> dict:
 @app.post("/chat")
 def chat(request: QuestionRequest) -> dict:
     return answer_question(request.question)
+
+
+@app.get("/stairs-requests")
+def stairs_requests() -> list:
+    return get_all_foi_requests()
 
 
 @app.get("/properties/{property_id}/case-file")

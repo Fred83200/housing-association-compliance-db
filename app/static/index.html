@@ -278,7 +278,7 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Active STAIRS requests</div>
-              <div class="app-stat-card__value">4</div>
+              <div class="app-stat-card__value" id="stat-active-stairs">4</div>
               <div class="app-stat-card__detail govuk-body-s">2 due within 7 days</div>
             </div>
           </div>
@@ -304,7 +304,7 @@
                   <th class="govuk-table__header" scope="col">Status</th>
                 </tr>
               </thead>
-              <tbody class="govuk-table__body">
+              <tbody class="govuk-table__body" id="tbody-dashboard-stairs">
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td>
                   <td class="govuk-table__cell">14 Birchwood Ave</td>
@@ -422,19 +422,19 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
               <div class="app-stat-card__label govuk-body-s">Total active</div>
-              <div class="app-stat-card__value">4</div>
+              <div class="app-stat-card__value" id="stat-requests-total">4</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s">Due within 7 days</div>
-              <div class="app-stat-card__value">2</div>
+              <div class="app-stat-card__value" id="stat-requests-due7">2</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--green">
               <div class="app-stat-card__label govuk-body-s">Released (30 days)</div>
-              <div class="app-stat-card__value">12</div>
+              <div class="app-stat-card__value" id="stat-requests-released">12</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
@@ -459,7 +459,7 @@
               <th class="govuk-table__header" scope="col">Action</th>
             </tr>
           </thead>
-          <tbody class="govuk-table__body">
+          <tbody class="govuk-table__body" id="tbody-requests-stairs">
             <tr class="govuk-table__row">
               <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td>
               <td class="govuk-table__cell">James Whitfield</td>
@@ -1253,6 +1253,107 @@
     function handleKey(e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     }
+
+    // ── STAIRS requests data fetching ──────────────
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function daysRemaining(iso) {
+      const due = new Date(iso + 'T00:00:00');
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      return Math.round((due - today) / 86400000);
+    }
+
+    function deadlineClass(days) {
+      if (days <= 3) return 'app-deadline--urgent';
+      if (days <= 7) return 'app-deadline--soon';
+      return 'app-deadline--ok';
+    }
+
+    function statusTag(status) {
+      const colours = {
+        'In review': 'govuk-tag--purple',
+        'Discovering': 'govuk-tag--light-blue',
+        'Redacting': 'govuk-tag--yellow',
+        'Released': 'govuk-tag--green',
+      };
+      const cls = colours[status] || '';
+      return `<strong class="govuk-tag ${cls}">${status}</strong>`;
+    }
+
+    function buildDashboardRow(r) {
+      const days = daysRemaining(r.due_date);
+      const cls = deadlineClass(days);
+      const deadlineText = `${fmtDate(r.due_date)} (${days} day${days === 1 ? '' : 's'})`;
+      return `<tr class="govuk-table__row">
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+      </tr>`;
+    }
+
+    function buildRequestsRow(r) {
+      const released = !!r.response_date;
+      const days = released ? null : daysRemaining(r.due_date);
+      const cls = days !== null ? deadlineClass(days) : '';
+      const deadlineText = days !== null
+        ? `${fmtDate(r.due_date)} (${days} day${days === 1 ? '' : 's'})`
+        : fmtDate(r.due_date);
+      const rowStyle = released ? ' style="color:#505a5f"' : '';
+      const actionLabel = (!released && r.status === 'In review') ? 'Review' : 'View';
+      return `<tr class="govuk-table__row"${rowStyle}>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.first_name} ${r.last_name}</td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell">${fmtDate(r.request_date)}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${actionLabel}</a></td>
+      </tr>`;
+    }
+
+    async function loadStairsRequests() {
+      try {
+        const res = await fetch('/stairs-requests');
+        if (!res.ok) return;
+        const requests = await res.json();
+
+        const active = requests.filter(r => !r.response_date);
+        const dueWithin7 = active.filter(r => daysRemaining(r.due_date) <= 7);
+        const released30 = requests.filter(r => {
+          if (!r.response_date) return false;
+          const d = new Date(r.response_date + 'T00:00:00');
+          const today = new Date(); today.setHours(0, 0, 0, 0);
+          return (today - d) / 86400000 <= 30;
+        });
+
+        const statActiveDash = document.getElementById('stat-active-stairs');
+        if (statActiveDash) statActiveDash.textContent = active.length;
+
+        const statTotal = document.getElementById('stat-requests-total');
+        if (statTotal) statTotal.textContent = active.length;
+        const statDue7 = document.getElementById('stat-requests-due7');
+        if (statDue7) statDue7.textContent = dueWithin7.length;
+        const statReleased = document.getElementById('stat-requests-released');
+        if (statReleased) statReleased.textContent = released30.length;
+
+        const dashTbody = document.getElementById('tbody-dashboard-stairs');
+        if (dashTbody) dashTbody.innerHTML = active.slice(0, 4).map(buildDashboardRow).join('');
+
+        const reqTbody = document.getElementById('tbody-requests-stairs');
+        if (reqTbody) reqTbody.innerHTML = requests.map(buildRequestsRow).join('');
+      } catch (e) {
+        // backend unavailable — hardcoded mock rows remain
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStairsRequests);
 
     function clearChat() {
       document.getElementById('chat-messages').innerHTML = `
