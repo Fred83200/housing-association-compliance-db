@@ -101,8 +101,7 @@ const foiRequestsTable = `
     </thead>
 
     <tbody class="govuk-table__body">
-      <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0041</td><td class="govuk-table__cell">8 May 2025</td><td class="govuk-table__cell">3 days</td></tr>
-      <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0038</td><td class="govuk-table__cell">13 May 2025</td><td class="govuk-table__cell">8 days</td></tr>
+      <tr class="govuk-table__row"><td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail'); closeResultsModal(); return false;">FOI-2025-0041</a></td><td class="govuk-table__cell">8 May 2025</td><td class="govuk-table__cell">3 days</td></tr>      <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0038</td><td class="govuk-table__cell">13 May 2025</td><td class="govuk-table__cell">8 days</td></tr>
       <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0035</td><td class="govuk-table__cell">20 May 2025</td><td class="govuk-table__cell">15 days</td> </tr>
       <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0031</td><td class="govuk-table__cell">26 May 2025</td><td class="govuk-table__cell">21 days</td></tr>
     </tbody>

@@ -89,4 +89,20 @@ function closeForm() {
   function closeResultsModal() {
     document.getElementById('resultsModal').style.display = 'none';
   }
-    
+
+function openStairsRequestModal() {
+  document.getElementById('stairsRequestModal').style.display = 'block';
+}
+
+function closeStairsRequestModal() {
+  document.getElementById('stairsRequestModal').style.display = 'none';
+}
+
+function openComplianceModal() {
+  document.getElementById('complianceModal').style.display = 'block';
+}
+
+function closeComplianceModal() {
+  document.getElementById('complianceModal').style.display = 'none';
+}
+

@@ -6,6 +6,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@6.1.0/dist/govuk/govuk-frontend.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
   <link rel="stylesheet" href="css/styles.css">
 
@@ -142,129 +143,33 @@
             </div>
           </div>
         </div>
-
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Active STAIRS requests</h2>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header" scope="col">Reference</th>
-                  <th class="govuk-table__header" scope="col">Property</th>
-                  <th class="govuk-table__header" scope="col">Type</th>
-                  <th class="govuk-table__header" scope="col">Deadline</th>
-                  <th class="govuk-table__header" scope="col">Status</th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td>
-                  <td class="govuk-table__cell">14 Birchwood Ave</td>
-                  <td class="govuk-table__cell">Repairs history</td>
-                  <td class="govuk-table__cell app-deadline--urgent">8 May 2025 (3 days)</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--purple">In review</strong></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0038</a></td>
-                  <td class="govuk-table__cell">8 Maple Court</td>
-                  <td class="govuk-table__cell">Safety inspections</td>
-                  <td class="govuk-table__cell app-deadline--soon">13 May 2025 (8 days)</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--light-blue">Discovering</strong></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0035</a></td>
-                  <td class="govuk-table__cell">22 Heather Close</td>
-                  <td class="govuk-table__cell">Contractor records</td>
-                  <td class="govuk-table__cell app-deadline--ok">20 May 2025 (15 days)</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">Redacting</strong></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0031</a></td>
-                  <td class="govuk-table__cell">3 Elm Street</td>
-                  <td class="govuk-table__cell">Tenancy docs</td>
-                  <td class="govuk-table__cell app-deadline--ok">26 May 2025 (21 days)</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--light-blue">Discovering</strong></td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('requests');return false;">View all STAIRS requests</a></p>
-
-            <h2 class="govuk-heading-m govuk-!-margin-top-6">Properties requiring attention</h2>
-            <table class="govuk-table">
-              <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header" scope="col">Address</th>
-                  <th class="govuk-table__header" scope="col">Issue</th>
-                  <th class="govuk-table__header" scope="col">Status</th>
-                  <th class="govuk-table__header" scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">14 Birchwood Avenue, Manchester</a></td>
-                  <td class="govuk-table__cell">Gas safety certificate expired</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">View case file</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">8 Maple Court, Salford</a></td>
-                  <td class="govuk-table__cell">Fire alarm inspection overdue</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">3 Elm Street, Rochdale</a></td>
-                  <td class="govuk-table__cell">Electrical inspection due</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">At risk</strong></td>
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="govuk-body"><a class="govuk-link" href="#" onclick="showScreen('compliance');return false;">View all 7 non-compliant properties</a></p>
-          </div>
-
-          <div class="govuk-grid-column-one-third">
-            <h2 class="govuk-heading-m">Recent activity</h2>
-            <div class="app-timeline">
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--green">✓</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">FOI-2025-0029 — response released</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Today, 09:14</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--blue">AI</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">Agent completed discovery on FOI-2025-0041</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Today, 08:47</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--yellow">!</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">FOI-2025-0038 flagged for manual check</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Yesterday, 16:32</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--green">✓</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">5 properties re-inspected, now compliant</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">Yesterday, 11:05</p>
-                </div>
-              </div>
-              <div class="app-timeline__item">
-                <div class="app-timeline__marker app-timeline__marker--blue">AI</div>
-                <div>
-                  <p class="app-timeline__event govuk-body govuk-!-margin-bottom-0">Auto-redaction complete for FOI-2025-0035</p>
-                  <p class="app-timeline__time govuk-body-s govuk-!-margin-bottom-0">2 May, 14:20</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Active STAIRS Requests</h5>
+        <p class="card-text">Click the button below to view the active STAIRS requests. You can quick view a number or view all.</p>
+        <button type="button" onclick="openStairsRequestModal()" class="btn btn-primary">Quick view</button>
+        <a href="#" onclick="showScreen('requests');return false;" class="btn btn-primary">View all</a>
       </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Properties requiring attention</h5>
+        <p class="card-text">Click the button below to view properties requiring attention. You can quick view a number or view all.</p>
+        <button type="button" onclick="openComplianceModal()" class="btn btn-primary">Quick view</button>
+        <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+      </div>
+    </div>
+  </div>
+</div>       
+
+        
+
+          
 
       <!-- ─── REQUESTS LIST ────────────────────────── -->
       <div class="app-screen" id="screen-requests">
@@ -1012,6 +917,7 @@
       <div class="chat-footer">
 
         <textarea id="chat-input"placeholder="Type your message..."></textarea>
+
         <!--Buttons to send or clear messsage in chat-->
         <div class="chat-footer-buttons">
 
@@ -1040,7 +946,180 @@
   </div>
 </div>
 
-  <!-- Script to handle Javascript-->
+<!-- Stairs requests modal for overview page-->
+<div id="stairsRequestModal" class="table-modal">
+  <div class="table-modal-content">
+
+    <div class="table-modal-header">
+      <h3>Active STAIRS requests</h3>
+
+      <button type="button" onclick="closeStairsRequestModal()">x</button>
+    </div>
+
+    <div class="table-modal-body">
+
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col">Reference</th>
+            <th class="govuk-table__header" scope="col">Property</th>
+            <th class="govuk-table__header" scope="col">Type</th>
+            <th class="govuk-table__header" scope="col">Deadline</th>
+            <th class="govuk-table__header" scope="col">Status</th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link"
+                 href="#"
+                 onclick="showScreen('request-detail'); closeStairsRequestModal(); return false;">
+                FOI-2025-0041
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">14 Birchwood Ave</td>
+
+            <td class="govuk-table__cell">Repairs history</td>
+
+            <td class="govuk-table__cell app-deadline--urgent">
+              8 May 2025 (3 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--purple">
+                In review
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0038
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">8 Maple Court</td>
+
+            <td class="govuk-table__cell">Safety inspections</td>
+
+            <td class="govuk-table__cell app-deadline--soon">
+              13 May 2025 (8 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--light-blue">
+                Discovering
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0035
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">22 Heather Close</td>
+
+            <td class="govuk-table__cell">Contractor records</td>
+
+            <td class="govuk-table__cell app-deadline--ok">
+              20 May 2025 (15 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--yellow">
+                Redacting
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="#">
+                FOI-2025-0031
+              </a>
+            </td>
+
+            <td class="govuk-table__cell">3 Elm Street</td>
+
+            <td class="govuk-table__cell">Tenancy docs</td>
+
+            <td class="govuk-table__cell app-deadline--ok">
+              26 May 2025 (21 days)
+            </td>
+
+            <td class="govuk-table__cell">
+              <strong class="govuk-tag govuk-tag--light-blue">
+                Discovering
+              </strong>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+      <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+    </div>
+
+  </div>
+</div>
+<!-- Compliance modal-->
+
+<div id="complianceModal" class="table-modal">
+  <div class="table-modal-content">
+    <div class="table-modal-header">
+      <h3>Properties requiring attention</h3>
+      <button type="button" onclick="closeComplianceModal()">x</button>
+    </div>
+
+    <div class="table-modal-body">
+      <table class="govuk-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header">Address</th>
+            <th class="govuk-table__header">Issue</th>
+            <th class="govuk-table__header">Status</th>
+            <th class="govuk-table__header"></th>
+          </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile'); closeComplianceModal(); return false;">14 Birchwood Avenue, Manchester</a></td>
+            <td class="govuk-table__cell">Gas safety certificate expired</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
+            <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile'); closeComplianceModal(); return false;">View case file</a></td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><a class="govuk-link" href="#">8 Maple Court, Salford</a></td>
+            <td class="govuk-table__cell">Fire alarm inspection overdue</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
+            <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
+          </tr>
+
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><a class="govuk-link" href="#">3 Elm Street, Rochdale</a></td>
+            <td class="govuk-table__cell">Electrical inspection due</td>
+            <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">At risk</strong></td>
+            <td class="govuk-table__cell"><a class="govuk-link" href="#">View case file</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="govuk-body">
+        <a href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+  <!-- Scripts to handle Javascript-->
   <script src="js/mockResponses.js"></script>
   <script src="js/script.js"></script>
 </body>
