@@ -1189,5 +1189,145 @@
   <!-- Script to handle Javascript-->
   <script src="js/mockResponses.js"></script>
   <script src="js/script.js"></script>
+  <script>
+    // ── STAIRS requests data fetching ──────────────
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function daysRemaining(iso) {
+      const due = new Date(iso + 'T00:00:00');
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      return Math.round((due - today) / 86400000);
+    }
+
+    function deadlineClass(days) {
+      if (days <= 3) return 'app-deadline--urgent';
+      if (days <= 7) return 'app-deadline--soon';
+      return 'app-deadline--ok';
+    }
+
+    function statusTag(status) {
+      const colours = {
+        'Open':        'govuk-tag--blue',
+        'In Review':   'govuk-tag--purple',
+        'Redacting':   'govuk-tag--yellow',
+        'Responded':   'govuk-tag--green',
+        'Closed':      'govuk-tag--grey',
+        'In review':   'govuk-tag--purple',
+        'Discovering': 'govuk-tag--light-blue',
+        'Released':    'govuk-tag--green',
+      };
+      const cls = colours[status] || 'govuk-tag--blue';
+      return `<strong class="govuk-tag ${cls}">${status}</strong>`;
+    }
+
+    function deadlineText(iso, released) {
+      if (released) return fmtDate(iso);
+      const days = daysRemaining(iso);
+      if (days < 0) return `${fmtDate(iso)} <span style="color:#d4351c;font-weight:700">(overdue)</span>`;
+      return `${fmtDate(iso)} (${days} day${days === 1 ? '' : 's'})`;
+    }
+
+    function buildDashboardRow(r) {
+      const days = daysRemaining(r.due_date);
+      const cls = days < 0 ? 'app-deadline--urgent' : deadlineClass(days);
+      return `<tr class="govuk-table__row">
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText(r.due_date, false)}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+      </tr>`;
+    }
+
+    function buildRequestsRow(r) {
+      const released = !!r.response_date;
+      const days = released ? null : daysRemaining(r.due_date);
+      const cls = days !== null ? (days < 0 ? 'app-deadline--urgent' : deadlineClass(days)) : '';
+      const rowStyle = released ? ' style="color:#505a5f"' : '';
+      const actionLabel = (!released && r.status === 'In Review') ? 'Review' : 'View';
+      return `<tr class="govuk-table__row"${rowStyle}>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.first_name} ${r.last_name}</td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell">${fmtDate(r.request_date)}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText(r.due_date, released)}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${actionLabel}</a></td>
+      </tr>`;
+    }
+
+    async function loadStairsRequests() {
+      try {
+        const res = await fetch('/stairs-requests');
+        if (!res.ok) return;
+        const requests = await res.json();
+
+        const active = requests.filter(r => !r.response_date);
+        const dueWithin7 = active.filter(r => { const d = daysRemaining(r.due_date); return d >= 0 && d <= 7; });
+        const released30 = requests.filter(r => {
+          if (!r.response_date) return false;
+          const d = new Date(r.response_date + 'T00:00:00');
+          const today = new Date(); today.setHours(0, 0, 0, 0);
+          return (today - d) / 86400000 <= 30;
+        });
+
+        const statActiveDash = document.getElementById('stat-active-stairs');
+        if (statActiveDash) statActiveDash.textContent = active.length;
+
+        const statTotal = document.getElementById('stat-requests-total');
+        if (statTotal) statTotal.textContent = active.length;
+        const statDue7 = document.getElementById('stat-requests-due7');
+        if (statDue7) statDue7.textContent = dueWithin7.length;
+        const statReleased = document.getElementById('stat-requests-released');
+        if (statReleased) statReleased.textContent = released30.length;
+
+        const dashTbody = document.getElementById('tbody-dashboard-stairs');
+        if (dashTbody) dashTbody.innerHTML = active.slice(0, 4).map(buildDashboardRow).join('');
+
+        const reqTbody = document.getElementById('tbody-requests-stairs');
+        if (reqTbody) reqTbody.innerHTML = requests.map(buildRequestsRow).join('');
+      } catch (e) {
+        console.error('Failed to load STAIRS requests:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStairsRequests);
+
+    // ── Case file Overview tab ─────────────────────
+    let currentPropertyId = 4;
+
+    function showCaseFile(propertyId) {
+      currentPropertyId = propertyId;
+      showScreen('casefile');
+      loadCaseFileOverview(propertyId);
+    }
+
+    async function loadCaseFileOverview(propertyId) {
+      const dd = document.getElementById('cf-active-stairs-dd');
+      if (!dd) return;
+      try {
+        const res = await fetch(`/properties/${propertyId}/case-file`);
+        if (!res.ok) { dd.textContent = 'Unavailable'; return; }
+        const data = await res.json();
+
+        const active = (data.foi_requests || []).filter(r => !r.response_date);
+        if (active.length === 0) {
+          dd.textContent = 'None';
+        } else {
+          dd.innerHTML = active.map(r =>
+            `<a class="govuk-link" href="#">${r.request_reference} — due ${fmtDate(r.due_date)}</a>`
+          ).join('<br>');
+        }
+      } catch (e) {
+        console.error('Failed to load case file overview:', e);
+        dd.textContent = 'Unavailable';
+      }
+    }
+  </script>
 </body>
 </html>
