@@ -80,4 +80,13 @@ function closeForm() {
     document.getElementById("chatPopup").style.display = "none";
   }
 
-  
+  function openResultsModal(title, html) {
+    document.getElementById('resultsModalTitle').textContent = title;
+    document.getElementById('resultsModalBody').innerHTML = html;
+    document.getElementById('resultsModal').style.display = 'block';
+  }
+
+  function closeResultsModal() {
+    document.getElementById('resultsModal').style.display = 'none';
+  }
+    

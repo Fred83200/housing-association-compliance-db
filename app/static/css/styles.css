@@ -216,6 +216,14 @@
 
   cursor: pointer;
 }
+
+.app-header-divider {
+  margin: 0 12px;
+
+  color: rgba(255,255,255,0.6);
+
+  font-size: 1.2rem;
+}
 /* chat body */
 .chat-body {
   padding: 20px;
@@ -355,6 +363,65 @@
   width: 100%;
 }
 
+.chat-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.chat-table-wrapper table {
+  min-width: 500px;
+  font-size: 0.85rem;
+}
+
+.chat-table-wrapper .govuk-table__cell,
+.chat-table-wrapper .govuk-table__header {
+  white-space: nowrap;
+}
+/* results modal */
+.results-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.results-modal__content {
+  background: white;
+  width: 80%;
+  max-width: 900px;
+  max-height: 80vh;
+  margin: 8vh auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.results-modal__header {
+  background: #1d70b8;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-modal__header h3 {
+  margin: 0;
+}
+
+.results-modal__header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.results-modal__body {
+  padding: 20px;
+  overflow-x: auto;
+  max-height: 65vh;
+}
 .app-account-nav {
   margin-left: auto;
 }

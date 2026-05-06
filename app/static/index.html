@@ -26,16 +26,14 @@
     <div class="govuk-header__logo">
 
       <!--  Clickable home icon -->
-      <a href="#"
-        class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
+      <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
         <img src="images/white-home.png" alt="Home" class="app-home-icon">
       </a>
 
-      <span class="app-logo">Greenfields Housing</span>
+      <span class="govuk-header__link govuk-header__service-name">Greenfields Housing</span>
+      <span class="app-header-divider">|</span>
 
-    </div>
-
-    <div class="govuk-header__content">
+   <div class="govuk-header__content">
       <span class="govuk-header__link govuk-header__service-name">STAIRS Response Agent</span>
 
       <nav aria-label="Account" class="govuk-header__navigation app-account-nav">
@@ -1028,6 +1026,18 @@
   </div>
 
 </div>
+</div>
+
+<!-- Modal for chat results-->
+<div id="resultsModal" class="results-modal">
+  <div class="results-modal__content">
+    <div class="results-modal__header">
+      <h3 id="resultsModalTitle">Results</h3>
+      <button type="button" onclick="closeResultsModal()">x</button>
+    </div>
+
+    <div id="resultsModalBody" class="results-modal__body"></div>
+  </div>
 </div>
 
   <!-- Script to handle Javascript-->
