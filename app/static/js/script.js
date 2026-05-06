@@ -72,7 +72,12 @@ function closeForm() {
       function openChat() {
     document.getElementById("chatPopup").style.display = "block";
   }
-
+      function startChat() {
+        document.getElementById('chatStartScreen').style.display = 'none';
+        document.getElementById('chatScreen').style.display = 'block';
+      }
   function closeChat() {
     document.getElementById("chatPopup").style.display = "none";
   }
+
+  

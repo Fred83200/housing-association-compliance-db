@@ -67,9 +67,6 @@
             <li class="govuk-service-navigation__item" data-screen="casefile">
               <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('casefile');return false;">Property Case File</a>
             </li>
-            <li class="govuk-service-navigation__item" data-screen="chat">
-              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('chat');return false;">Ask the Agent</a>
-            </li>
           </ul>
         </div>
       </nav>
@@ -925,62 +922,7 @@
         </div>
       </div>
 
-      <!-- ─── CHAT ─────────────────────────────────── -->
-      <div class="app-screen" id="screen-chat">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-xl">Ask the agent</h1>
-            <p class="govuk-body">Search across all property records, compliance data, repair history, and documents using natural language.</p>
 
-            <div class="app-chat-messages" id="chat-messages">
-              <div class="app-chat-msg">
-                <div class="app-chat-avatar app-chat-avatar--bot">AI</div>
-                <div class="app-chat-bubble app-chat-bubble--bot">
-                  Hello Sarah. I can search across all property records, compliance data, repair history, and documents. What would you like to know?
-                </div>
-              </div>
-            </div>
-
-            <div class="app-chips" id="chips">
-              <button class="app-chip" onclick="sendChip(this)">Which properties are non-compliant?</button>
-              <button class="app-chip" onclick="sendChip(this)">Show overdue inspections</button>
-              <button class="app-chip" onclick="sendChip(this)">Find all boiler repair records</button>
-              <button class="app-chip" onclick="sendChip(this)">List open FOI requests</button>
-              <button class="app-chip" onclick="sendChip(this)">Properties with damp issues</button>
-            </div>
-
-            <div class="govuk-form-group">
-              <label class="govuk-label" for="chat-input">Your question</label>
-              <textarea class="govuk-textarea" id="chat-input" rows="3"
-                placeholder="Ask about properties, compliance, inspections, repairs, documents…"
-                onkeydown="handleKey(event)"></textarea>
-            </div>
-            <div class="govuk-button-group">
-              <button class="govuk-button" onclick="sendMessage()" data-module="govuk-button">Send</button>
-              <button class="govuk-button govuk-button--secondary" onclick="clearChat()" data-module="govuk-button">Clear chat</button>
-            </div>
-          </div>
-
-          <div class="govuk-grid-column-one-third">
-            <div class="govuk-inset-text">
-              <h2 class="govuk-heading-s">What you can ask</h2>
-              <ul class="govuk-list govuk-list--bullet govuk-body-s">
-                <li>Compliance status of any property</li>
-                <li>Overdue inspections and gas safety</li>
-                <li>Repair history and contractor details</li>
-                <li>Open or overdue FOI / STAIRS requests</li>
-                <li>Documents: boiler reports, fire safety, damp records</li>
-                <li>Tenant and tenancy information</li>
-              </ul>
-              <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m">
-              <p class="govuk-body-s govuk-!-margin-bottom-0">Results combine structured database records with AI semantic search across all uploaded documents.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </div>
 
   <!-- ═══ FOOTER ════════════════════════════════════ -->
   <footer class="govuk-footer">
@@ -1011,83 +953,85 @@
     initAll()
   </script>
 
-<!-- Sticky Chat Button -->
+<!-- Chat Button (sticky)-->
 <button class="chat-icon" onclick="openChat()">
   <img src="images/chatbot-icon.png" alt="Chat">
-  <span>Chat</span>
+  <span>Ask the Agent</span>
 </button>
 
 <!-- Chat Popup -->
 <div class="chat-popup" id="chatPopup">
+
   <div class="chat-header">
-    <h3>Ask the Agent</h3>
-    <button onclick="closeChat()">×</button>
+    <h3>Chat</h3>
+    <button type="button" onclick="closeChat()">x</button>
   </div>
 
-  <div class="chat-body">
-    <p><strong>Agent:</strong> Hi! How can I help?</p>
+  <!-- Start screen with examples-->
+  <div class="chat-start-screen" id="chatStartScreen">
+    <h4>Welcome to the Greenfields Housing Chat Agent</h4>
+
+    <p>What can you ask?</p>
+
+    <ul>
+      <li>The compliance status of any property</li>
+      <li>Overdue inspections and gas safety</li>
+      <li>Repair history and contractor details</li>
+      <li>Open or overdue FOI / STAIRS requests</li>
+      <li>Documents: boiler reports, fire safety, damp records</li>
+      <li>Tenant and tenancy information</li>
+    </ul>
+
+    <p>The results combine structured database records with AI semantic search across uploaded documents.</p>
+
+    <!-- Button to start chat with agent -->
+    <button type="button" class="govuk-button app-start-chat-btn" onclick="startChat()">
+      <span>Start chat</span>
+      <img src="images/arrow-image.png" alt="Arrow" class="app-start-chat-arrow">
+    </button>
   </div>
 
-  <div class="chat-footer">
-    <input type="text" placeholder="Type your message..." />
-    <button>Send</button>
+  <!-- Chat screen -->
+  <div class="chat-screen" id="chatScreen" style="display: none;">
+
+    <div class="chat-body">
+      <p>
+        <strong>Agent:</strong>
+        Hello Sarah. I can search across all property records, compliance data, repair history, and documents using natural language. What would you like to know?
+      </p>
+
+      <!-- Suggestion tabs within chat-->
+      <div class="app-chips" id="chips">
+        <button type="button" class="app-chip" onclick="sendChip(this)">Which properties are non-compliant?</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Show overdue inspections</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Find all boiler repair records</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">List open FOI requests</button>
+        <button type="button" class="app-chip" onclick="sendChip(this)">Properties with damp issues</button>
+      </div>
+
+      <div id="chat-messages"></div>
+    </div>
+      <div class="chat-footer">
+
+        <textarea id="chat-input"placeholder="Type your message..."></textarea>
+        <!--Buttons to send or clear messsage in chat-->
+        <div class="chat-footer-buttons">
+
+          <button type="button" class="chat-send-btn" onclick="sendMessage()">Send</button>
+
+          <button type="button" class="chat-clear-btn" onclick="clearChat()">Clear chat</button>
+
+        </div>
+
+      </div>
+
   </div>
+
+</div>
 </div>
 
-
-
-  <script>
-
-    // ── Chat ───────────────────────────────────────
-    const mockResponses = {
-      "which properties are non-compliant": `<strong>7 non-compliant properties</strong> found across the portfolio:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Address</th><th class="govuk-table__header">Issue</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Gas safety certificate expired (547 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">8 Maple Court</td><td class="govuk-table__cell">Fire alarm inspection overdue (426 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">19 Primrose Way</td><td class="govuk-table__cell">Gas safety certificate expired (517 days)</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">+ 4 more</td><td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('compliance');return false;">View full compliance list</a></td></tr>
-        </tbody></table>`,
-      "show overdue inspections": `<strong>14 properties</strong> have not been inspected in over 12 months.<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Address</th><th class="govuk-table__header">Days overdue</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">4 Thornton Gardens</td><td class="govuk-table__cell">578 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">547 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">19 Primrose Way</td><td class="govuk-table__cell">517 days</td></tr>
-        </tbody></table>`,
-      "find all boiler repair records": `Found <strong>3 boiler-related repair records</strong> across database and documents:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Property</th><th class="govuk-table__header">Date</th><th class="govuk-table__header">Contractor</th><th class="govuk-table__header">Cost</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Mar 2024</td><td class="govuk-table__cell">Patel Plumbing Ltd</td><td class="govuk-table__cell">£1,840</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">8 Maple Court</td><td class="govuk-table__cell">Jan 2024</td><td class="govuk-table__cell">CityGas Ltd</td><td class="govuk-table__cell">£180</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">22 Heather Close</td><td class="govuk-table__cell">Oct 2023</td><td class="govuk-table__cell">Patel Plumbing Ltd</td><td class="govuk-table__cell">£420</td></tr>
-        </tbody></table><br>
-        Also matched document: <strong>boiler_repair_report_2024-03.txt</strong> (score 0.94)`,
-      "list open foi requests": `<strong>4 active STAIRS / FOI requests</strong> currently open:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Reference</th><th class="govuk-table__header">Due date</th><th class="govuk-table__header">Days remaining</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td><td class="govuk-table__cell">8 May 2025</td><td class="govuk-table__cell" style="color:#d4351c;font-weight:700">3 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0038</td><td class="govuk-table__cell">13 May 2025</td><td class="govuk-table__cell">8 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0035</td><td class="govuk-table__cell">20 May 2025</td><td class="govuk-table__cell">15 days</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">FOI-2025-0031</td><td class="govuk-table__cell">26 May 2025</td><td class="govuk-table__cell">21 days</td></tr>
-        </tbody></table>`,
-      "properties with damp issues": `Found <strong>2 properties</strong> with damp or mould records, plus 1 document match:<br><br>
-        <table class="govuk-table"><thead class="govuk-table__head"><tr class="govuk-table__row">
-          <th class="govuk-table__header">Property</th><th class="govuk-table__header">Details</th>
-        </tr></thead><tbody class="govuk-table__body">
-          <tr class="govuk-table__row"><td class="govuk-table__cell">14 Birchwood Ave</td><td class="govuk-table__cell">Damp treatment Aug 2023 — ProDamp Solutions — resolved</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">2 Ash Lane</td><td class="govuk-table__cell">Assessment overdue — no treatment on record</td></tr>
-          <tr class="govuk-table__row"><td class="govuk-table__cell">Document match</td><td class="govuk-table__cell">damp_mould_risk_note.txt — relevance score 0.91</td></tr>
-        </tbody></table>`
-    }
-
-   
-  </script>
-
+  <!-- Script to handle Javascript-->
+  <script src="js/mockResponses.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
