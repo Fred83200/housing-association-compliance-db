@@ -131,7 +131,7 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
               <div class="app-stat-card__label govuk-body-s govuk-!-margin-bottom-0">Active STAIRS requests</div>
-              <div class="app-stat-card__value">4</div>
+              <div class="app-stat-card__value" id="stat-active-stairs">4</div>
               <div class="app-stat-card__detail govuk-body-s">2 due within 7 days</div>
             </div>
           </div>
@@ -222,19 +222,19 @@
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
               <div class="app-stat-card__label govuk-body-s">Total active</div>
-              <div class="app-stat-card__value">4</div>
+              <div class="app-stat-card__value" id="stat-requests-total">4</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
               <div class="app-stat-card__label govuk-body-s">Due within 7 days</div>
-              <div class="app-stat-card__value">2</div>
+              <div class="app-stat-card__value" id="stat-requests-due7">2</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--green">
               <div class="app-stat-card__label govuk-body-s">Released (30 days)</div>
-              <div class="app-stat-card__value">12</div>
+              <div class="app-stat-card__value" id="stat-requests-released">12</div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
@@ -259,67 +259,7 @@
               <th class="govuk-table__header" scope="col">Action</th>
             </tr>
           </thead>
-          <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td>
-              <td class="govuk-table__cell">James Whitfield</td>
-              <td class="govuk-table__cell">14 Birchwood Ave</td>
-              <td class="govuk-table__cell">Repairs history</td>
-              <td class="govuk-table__cell">5 Apr 2025</td>
-              <td class="govuk-table__cell app-deadline--urgent">8 May 2025 (3 days)</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--purple">In review</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">Review</a></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0038</a></td>
-              <td class="govuk-table__cell">Priya Mehta</td>
-              <td class="govuk-table__cell">8 Maple Court</td>
-              <td class="govuk-table__cell">Safety inspections</td>
-              <td class="govuk-table__cell">8 Apr 2025</td>
-              <td class="govuk-table__cell app-deadline--soon">13 May 2025 (8 days)</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--light-blue">Discovering</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0035</a></td>
-              <td class="govuk-table__cell">Denise Clarke</td>
-              <td class="govuk-table__cell">22 Heather Close</td>
-              <td class="govuk-table__cell">Contractor records</td>
-              <td class="govuk-table__cell">11 Apr 2025</td>
-              <td class="govuk-table__cell app-deadline--ok">20 May 2025 (15 days)</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">Redacting</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0031</a></td>
-              <td class="govuk-table__cell">Marcus Adeyemi</td>
-              <td class="govuk-table__cell">3 Elm Street</td>
-              <td class="govuk-table__cell">Tenancy docs</td>
-              <td class="govuk-table__cell">14 Apr 2025</td>
-              <td class="govuk-table__cell app-deadline--ok">26 May 2025 (21 days)</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--light-blue">Discovering</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
-            </tr>
-            <tr class="govuk-table__row" style="color:#505a5f">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0029</a></td>
-              <td class="govuk-table__cell">Sandra Obi</td>
-              <td class="govuk-table__cell">7 Coronation St</td>
-              <td class="govuk-table__cell">Full tenancy history</td>
-              <td class="govuk-table__cell">5 Apr 2025</td>
-              <td class="govuk-table__cell">5 May 2025</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--green">Released</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
-            </tr>
-            <tr class="govuk-table__row" style="color:#505a5f">
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">FOI-2025-0026</a></td>
-              <td class="govuk-table__cell">Tom Griffiths</td>
-              <td class="govuk-table__cell">2 Ash Lane</td>
-              <td class="govuk-table__cell">Damp &amp; mould records</td>
-              <td class="govuk-table__cell">2 Apr 2025</td>
-              <td class="govuk-table__cell">2 May 2025</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--green">Released</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">View</a></td>
-            </tr>
+          <tbody class="govuk-table__body" id="tbody-requests-stairs">
           </tbody>
         </table>
       </div>
