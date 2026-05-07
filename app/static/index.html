@@ -374,31 +374,31 @@
             <dl class="govuk-summary-list">
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Reference</dt>
-                <dd class="govuk-summary-list__value">FOI-2026-0041</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-reference">FOI-2026-0041</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Tenant</dt>
-                <dd class="govuk-summary-list__value">James Whitfield</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-tenant">James Whitfield</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Property</dt>
-                <dd class="govuk-summary-list__value">—</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-property">—</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Request type</dt>
-                <dd class="govuk-summary-list__value">Repairs history &amp; contractor records</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-type">Repairs history &amp; contractor records</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Date received</dt>
-                <dd class="govuk-summary-list__value">5 April 2025</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-received">5 April 2025</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Due date</dt>
-                <dd class="govuk-summary-list__value"><strong class="app-deadline--urgent">8 May 2026 (2 days)</strong></dd>
+                <dd class="govuk-summary-list__value" id="request-detail-due-date"><strong class="app-deadline--urgent">8 May 2026 (2 days)</strong></dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Assigned to</dt>
-                <dd class="govuk-summary-list__value">Sarah Barnes</dd>
+                <dd class="govuk-summary-list__value" id="request-detail-assigned-to">Sarah Barnes</dd>
               </div>
             </dl>
 
@@ -450,7 +450,7 @@
             </table>
 
             <div class="govuk-button-group govuk-!-margin-top-6">
-              <button class="govuk-button" data-module="govuk-button">Approve and release</button>
+              <button class="govuk-button" data-module="govuk-button" id="request-release-button" onclick="approveAndReleaseCurrentRequest()">Approve and release</button>
               <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Edit redactions</button>
               <a class="govuk-link" href="#" onclick="showCaseFile(currentPropertyId);return false;">View full case file</a>
             </div>
@@ -865,11 +865,11 @@
               </thead>
               <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2026-0041</a></td>
+                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="openRequestDetail({request_reference: 'FOI-2026-0041',first_name: 'James',last_name: 'Whitfield',address_line_1: '14 Birchwood Avenue',request_type: 'Repairs history',request_date: '2025-04-05',due_date: '2025-05-08',assigned_to: 'Sarah Barnes',status: 'In Review'}); return false;">FOI-2026-0041</a></td>
                   <td class="govuk-table__cell">Repairs history</td>
                   <td class="govuk-table__cell">5 Apr 2025</td>
                   <td class="govuk-table__cell app-deadline--urgent">8 May 2025</td>
-                  <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--purple">In review</strong></td>
+                  <td class="govuk-table__cell" id="casefile-foi-0041-status"><strong class="govuk-tag govuk-tag--purple">In review</strong></td>
                 </tr>
                 <tr class="govuk-table__row">
                   <td class="govuk-table__cell">FOI-2024-0118</td>
@@ -1289,10 +1289,14 @@
   </div>
 </div>
   <!-- Script to handle Javascript-->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="js/script.js"></script>
   <script>
     
     // ── STAIRS requests data fetching ──────────────
+    let currentPropertyId = 4;
+    let currentRequest = null;
+    const requestStatusByReference = {};
     function fmtDate(iso) {
       if (!iso) return '—';
       const d = new Date(iso + 'T00:00:00');
@@ -1346,19 +1350,20 @@
     }
 
     function buildRequestsRow(r) {
-      const released = !!r.response_date;
+      const currentStatus = requestStatusByReference[r.request_reference] || r.status;
+      const released = !!r.response_date || currentStatus === 'Released';
       const days = released ? null : daysRemaining(r.due_date);
       const cls = days !== null ? (days < 0 ? 'app-deadline--urgent' : deadlineClass(days)) : '';
       const rowStyle = released ? ' style="color:#505a5f"' : '';
-      const actionLabel = (!released && r.status === 'In Review') ? 'Review' : 'View';
+      const actionLabel = currentStatus === 'Released' ? 'View' : 'Review';
       return `<tr class="govuk-table__row"${rowStyle}>
-        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="openRequestDetail(${JSON.stringify(r).replaceAll('"', '&quot;')}); return false;">${r.request_reference}</a></td>
         <td class="govuk-table__cell">${r.first_name} ${r.last_name}</td>
         <td class="govuk-table__cell">${r.address_line_1}</td>
         <td class="govuk-table__cell">${r.request_type || '—'}</td>
         <td class="govuk-table__cell">${fmtDate(r.request_date)}</td>
         <td class="govuk-table__cell ${cls}">${deadlineText(r.due_date, released)}</td>
-        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+        <td class="govuk-table__cell">${statusTag(currentStatus)}</td>
         <td class="govuk-table__cell"><a class="govuk-link" href="#">${actionLabel}</a></td>
       </tr>`;
     }
@@ -1449,7 +1454,6 @@
     });
 
     // ── Case file Overview tab ─────────────────────
-    let currentPropertyId = 4;
 
     function showCaseFile(propertyId) {
       currentPropertyId = propertyId;
@@ -1492,6 +1496,42 @@
         findPropertyObject(data.rows) ||
         findPropertyObject(data.data)
       );
+    }
+
+    function openRequestDetail(request) {
+      currentRequest = request;
+
+      const currentStatus =
+        requestStatusByReference[request.request_reference] || request.status || 'In Review';
+
+      setText('request-detail-reference', request.request_reference);
+      setText('request-detail-tenant', `${request.first_name || ''} ${request.last_name || ''}`.trim());
+      setText('request-detail-property', request.address_line_1 || '—');
+      setText('request-detail-type', request.request_type || '—');
+      setText('request-detail-received', fmtDate(request.request_date));
+      setHtml(
+        'request-detail-due-date',
+        `<strong class="app-deadline--urgent">${fmtDate(request.due_date)}</strong>`
+      );
+      setText('request-detail-assigned-to', request.assigned_to || '—');
+
+      const title = document.getElementById('request-detail-title');
+      if (title) title.textContent = request.request_reference;
+
+      const actionButton = document.getElementById('request-release-button');
+
+      if (actionButton) {
+        if (currentStatus === 'Released') {
+          actionButton.textContent = 'Unrelease';
+          actionButton.onclick = unreleaseCurrentRequest;
+        } else {
+          actionButton.textContent = 'Approve and release';
+          actionButton.onclick = approveAndReleaseCurrentRequest;
+        }
+      }
+
+      updateStepper(currentStatus);
+      showScreen('request-detail');
     }
 
     async function loadCaseFileOverview(propertyId) {
@@ -1625,6 +1665,122 @@
         console.error('Failed to load case file overview:', e);
         if (dd) dd.textContent = 'Unavailable';
       }
+    }
+
+    function approveAndReleaseCurrentRequest() {
+        if (!currentRequest) {
+          console.error('No current request selected. Use openRequestDetail(request) before clicking Approve and release.');
+          alert('No request selected. Go back and open the request by clicking its reference.');
+          return;
+        }
+
+      requestStatusByReference[currentRequest.request_reference] = 'Released';
+
+      downloadResponsePdf(currentRequest);
+      updateCaseFileFoiStatus(currentRequest.request_reference, 'Released');
+      updateStepper('Released');
+
+      loadStairsRequests();
+      openRequestDetail(currentRequest);
+    }
+
+    function unreleaseCurrentRequest() {
+      if (!currentRequest) return;
+
+      requestStatusByReference[currentRequest.request_reference] = 'In Review';
+
+      updateCaseFileFoiStatus(currentRequest.request_reference, 'In Review');
+      updateStepper('In Review');
+
+      loadStairsRequests();
+      openRequestDetail(currentRequest);
+    }
+
+    function updateCaseFileFoiStatus(reference, status) {
+      if (reference !== 'FOI-2026-0041') return;
+
+      const statusCell = document.getElementById('casefile-foi-0041-status');
+      if (!statusCell) return;
+
+      statusCell.innerHTML = statusTag(status);
+    }
+
+    function updateStepper(status) {
+      const steps = document.querySelectorAll('#screen-request-detail .app-stepper__step');
+
+      steps.forEach(step => {
+        step.classList.remove('app-stepper__step--active');
+        step.classList.add('app-stepper__step--done');
+      });
+
+      if (status === 'Released') {
+        steps[5].classList.add('app-stepper__step--active');
+        steps[5].querySelector('.app-stepper__dot').textContent = '✓';
+      } else {
+        steps[4].classList.add('app-stepper__step--active');
+        steps[4].querySelector('.app-stepper__dot').textContent = '5';
+        steps[5].classList.remove('app-stepper__step--done');
+        steps[5].querySelector('.app-stepper__dot').textContent = '6';
+      }
+    }
+
+    function downloadResponsePdf(request) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      let y = 20;
+
+      doc.setFontSize(18);
+      doc.text(`STAIRS / FOI response - ${request.request_reference}`, 20, y);
+      y += 12;
+
+      doc.setFontSize(12);
+      doc.text(`Tenant: ${request.first_name || ''} ${request.last_name || ''}`.trim(), 20, y);
+      y += 8;
+      doc.text(`Property: ${request.address_line_1 || '—'}`, 20, y);
+      y += 8;
+      doc.text(`Request type: ${request.request_type || '—'}`, 20, y);
+      y += 12;
+
+      doc.setFontSize(14);
+      doc.text('AI summary', 20, y);
+      y += 10;
+
+      doc.setFontSize(11);
+      const summary = [
+        '4 documents found relating to repair activity at 14 Birchwood Avenue between April 2022 and August 2024.',
+        '',
+        '- Boiler replaced March 2024 by Patel Plumbing Ltd - cost £1,840',
+        '- Electrical inspection passed November 2023 - Sigma Electrical',
+        '- 3 additional minor repair jobs logged via contractor portal',
+        '- 1 tenant call note contains third-party name requiring redaction'
+      ];
+
+      summary.forEach(line => {
+        const wrapped = doc.splitTextToSize(line, 170);
+        doc.text(wrapped, 20, y);
+        y += wrapped.length * 7;
+      });
+
+      y += 8;
+      doc.setFontSize(14);
+      doc.text('Documents discovered by AI agent', 20, y);
+      y += 10;
+
+      doc.setFontSize(11);
+      const documents = [
+        'boiler_repair_report_2024-03.txt | Structured | 0.94',
+        'contractor_email_patel_plumbing.txt | Unstructured | 0.88',
+        'electrical_inspection_report_2023-11.txt | Structured | 0.79',
+        'tenant_call_note_2024-08.txt | Unstructured | 0.61 - review'
+      ];
+
+      documents.forEach(line => {
+        doc.text(line, 20, y);
+        y += 8;
+      });
+
+      doc.save(`${request.request_reference}-response.pdf`);
     }
 
     function setText(id, value) {
