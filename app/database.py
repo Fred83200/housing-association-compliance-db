@@ -10,7 +10,7 @@ load_dotenv()
 def get_connection():
     return psycopg2.connect(
         dbname=os.getenv("DATABASE_NAME", "housing_compliance_demo"),
-        user=os.getenv("DATABASE_USER", "fred"),
+        user=os.getenv("DATABASE_USER", "amy.breslin"),
         host=os.getenv("DATABASE_HOST", "localhost"),
         port=os.getenv("DATABASE_PORT", "5432"),
         cursor_factory=RealDictCursor,
