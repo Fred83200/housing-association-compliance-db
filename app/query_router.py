@@ -4,12 +4,15 @@ from app.llm_client import llm_generate_response
 from app.configs import Configs
 from app.discovery_service import (
     find_property,
+    get_boiler_repair_records,
     get_compliant_properties,
     get_non_compliant_properties,
+    get_open_foi_requests,
     get_overdue_foi_requests,
     get_overdue_inspections,
     get_properties_by_city,
     get_properties_inspected_after,
+    get_properties_with_damp_issues,
     get_property_foi_requests,
     get_property_overview,
     get_property_repairs,
@@ -96,6 +99,40 @@ def answer_question(question: str) -> dict:
             "answer": "Please enter a question.",
             "data": [],
         }
+
+    if "boiler" in normalized_question and "repair" in normalized_question:
+        rows = get_boiler_repair_records()
+        return _build_response(
+            "boiler_repair_records",
+            "I found the following boiler repair records.",
+            "I could not find any boiler repair records.",
+            rows,
+        )
+
+    if (
+        ("open" in normalized_question or "active" in normalized_question or "list" in normalized_question)
+        and ("foi" in normalized_question or "stairs" in normalized_question or "request" in normalized_question)
+    ):
+        rows = get_open_foi_requests()
+        return _build_response(
+            "open_foi_requests",
+            "I found the following open STAIRS / FOI requests.",
+            "I could not find any open STAIRS / FOI requests.",
+            rows,
+        )
+
+    if (
+        "damp" in normalized_question
+        or "mould" in normalized_question
+        or "mold" in normalized_question
+    ):
+        rows = get_properties_with_damp_issues()
+        return _build_response(
+            "properties_with_damp_issues",
+            "I found the following properties with damp or mould issues.",
+            "I could not find any properties with damp or mould issues.",
+            rows,
+        )
 
     # AI routing stuff first, fallback to keyword matching if nothing works
 
