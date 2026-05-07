@@ -126,6 +126,32 @@ def get_non_compliant_properties(where_clause: str = "TRUE") -> list[dict]:
         return cursor.fetchall()
 
 
+def get_all_foi_requests() -> list[dict]:
+    query = """
+        SELECT
+            request_reference,
+            request_date,
+            due_date,
+            request_type,
+            request_summary,
+            status,
+            assigned_to,
+            response_date,
+            address_line_1,
+            first_name,
+            last_name
+        FROM vw_property_foi_requests
+        ORDER BY
+            CASE WHEN response_date IS NULL THEN 0 ELSE 1 END,
+            due_date ASC
+        LIMIT 50;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
+
+
 def get_overdue_foi_requests() -> list[dict]:
     query = """
         SELECT
