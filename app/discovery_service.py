@@ -259,3 +259,144 @@ def get_properties_inspected_after(inspection_date: str) -> list[dict]:
     with db_cursor() as cursor:
         cursor.execute(query, (inspection_date,))
         return cursor.fetchall()
+
+def get_dashboard_summary() -> dict:
+    query = """
+        SELECT
+            COUNT(*) FILTER (WHERE compliance_status = 'Non-Compliant') AS non_compliant_properties,
+            COUNT(*) FILTER (
+                WHERE last_inspection_date < CURRENT_DATE - INTERVAL '365 days'
+            ) AS overdue_inspections,
+            COUNT(*) AS total_properties,
+            ROUND(
+                100.0 * COUNT(*) FILTER (WHERE compliance_status = 'Compliant') / NULLIF(COUNT(*), 0),
+                0
+            ) AS portfolio_compliance_rate
+        FROM properties;
+    """
+
+    foi_query = """
+        SELECT
+            COUNT(*) FILTER (WHERE response_date IS NULL) AS active_stairs_requests,
+            COUNT(*) FILTER (
+                WHERE response_date IS NULL
+                  AND due_date <= CURRENT_DATE + INTERVAL '7 days'
+            ) AS stairs_due_within_7_days,
+            COUNT(*) FILTER (
+                WHERE response_date >= CURRENT_DATE - INTERVAL '30 days'
+            ) AS released_last_30_days
+        FROM foi_requests;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        property_summary = cursor.fetchone()
+
+        cursor.execute(foi_query)
+        foi_summary = cursor.fetchone()
+
+        return {
+            **property_summary,
+            **foi_summary,
+        }
+
+
+def get_properties_requiring_attention() -> list[dict]:
+    query = """
+        SELECT
+            property_id,
+            uprn,
+            address_line_1,
+            city,
+            postcode,
+            compliance_status,
+            last_inspection_date,
+            CURRENT_DATE - last_inspection_date AS days_since_inspection
+        FROM properties
+        WHERE compliance_status = 'Non-Compliant'
+           OR last_inspection_date < CURRENT_DATE - INTERVAL '365 days'
+        ORDER BY
+            CASE WHEN compliance_status = 'Non-Compliant' THEN 0 ELSE 1 END,
+            last_inspection_date ASC
+        LIMIT 50;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
+
+def get_open_foi_requests() -> list[dict]:
+    query = """
+        SELECT
+            request_reference,
+            request_type,
+            status,
+            request_date,
+            due_date,
+            assigned_to,
+            property_id,
+            first_name,
+            last_name,
+            address_line_1,
+            postcode
+        FROM vw_property_foi_requests
+        WHERE response_date IS NULL
+        ORDER BY due_date ASC
+        LIMIT 50;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
+
+
+def get_boiler_repair_records() -> list[dict]:
+    query = """
+        SELECT
+            repair_id,
+            property_id,
+            uprn,
+            address_line_1,
+            postcode,
+            repair_category,
+            status,
+            reported_date,
+            completed_date,
+            contractor_name
+        FROM vw_property_repair_history
+        WHERE LOWER(repair_category) LIKE '%boiler%'
+           OR LOWER(description) LIKE '%boiler%'
+           OR LOWER(description) LIKE '%heating%'
+        ORDER BY reported_date DESC
+        LIMIT 50;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()
+
+
+def get_properties_with_damp_issues() -> list[dict]:
+    query = """
+        SELECT DISTINCT
+            p.property_id,
+            p.uprn,
+            p.address_line_1,
+            p.city,
+            p.postcode,
+            p.compliance_status,
+            p.last_inspection_date
+        FROM properties p
+        LEFT JOIN repair_records r
+            ON p.property_id = r.property_id
+        WHERE LOWER(r.repair_category) LIKE '%damp%'
+           OR LOWER(r.description) LIKE '%damp%'
+           OR LOWER(r.description) LIKE '%mould%'
+           OR LOWER(r.description) LIKE '%mold%'
+        ORDER BY p.last_inspection_date ASC
+        LIMIT 50;
+    """
+
+    with db_cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchall()

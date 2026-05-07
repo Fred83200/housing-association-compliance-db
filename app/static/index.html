@@ -26,23 +26,36 @@
 
     <div class="govuk-header__logo">
 
-      <!--  Clickable home icon -->
       <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
         <img src="images/white-home.png" alt="Home" class="app-home-icon">
       </a>
 
-      <span class="govuk-header__link govuk-header__service-name">Greenfields Housing</span>
+      <span class="govuk-header__link govuk-header__service-name">
+        Greenfields Housing
+      </span>
+
       <span class="app-header-divider">|</span>
 
-   <div class="govuk-header__content">
-      <span class="govuk-header__link govuk-header__service-name">STAIRS Response Agent</span>
+      <span class="govuk-header__link govuk-header__service-name">
+        STAIRS Response Agent
+      </span>
+
+    </div>
+
+    <div class="govuk-header__content">
 
       <nav aria-label="Account" class="govuk-header__navigation app-account-nav">
+
         <div class="app-profile">
           <img src="images/user-image.png" alt="Sarah Barnes" class="app-profile__image">
-          <span class="govuk-header__link">Sarah Barnes</span>
+
+          <span class="govuk-header__link">
+            Sarah Barnes
+          </span>
         </div>
+
       </nav>
+
     </div>
 
   </div>
@@ -63,7 +76,7 @@
               <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('compliance');return false;">Compliance</a>
             </li>
             <li class="govuk-service-navigation__item" data-screen="casefile">
-              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showScreen('casefile');return false;">Property Case File</a>
+              <a class="govuk-link govuk-service-navigation__link" href="#" onclick="showCaseFile(currentPropertyId);return false;">Property Case File</a>
             </li>
           </ul>
         </div>
@@ -361,7 +374,7 @@
             <dl class="govuk-summary-list">
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Reference</dt>
-                <dd class="govuk-summary-list__value">FOI-2025-0041</dd>
+                <dd class="govuk-summary-list__value">FOI-2026-0041</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Tenant</dt>
@@ -369,7 +382,7 @@
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Property</dt>
-                <dd class="govuk-summary-list__value">14 Birchwood Avenue, Manchester, M21 4EL</dd>
+                <dd class="govuk-summary-list__value">—</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Request type</dt>
@@ -381,7 +394,7 @@
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Due date</dt>
-                <dd class="govuk-summary-list__value"><strong class="app-deadline--urgent">8 May 2025 (3 days)</strong></dd>
+                <dd class="govuk-summary-list__value"><strong class="app-deadline--urgent">8 May 2026 (2 days)</strong></dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Assigned to</dt>
@@ -439,7 +452,7 @@
             <div class="govuk-button-group govuk-!-margin-top-6">
               <button class="govuk-button" data-module="govuk-button">Approve and release</button>
               <button class="govuk-button govuk-button--secondary" data-module="govuk-button">Edit redactions</button>
-              <a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">View full case file</a>
+              <a class="govuk-link" href="#" onclick="showCaseFile(currentPropertyId);return false;">View full case file</a>
             </div>
 
           </div>
@@ -642,11 +655,11 @@
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Address</dt>
-                    <dd class="govuk-summary-list__value">14 Birchwood Avenue, Manchester, M21 4EL</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-address">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">UPRN</dt>
-                    <dd class="govuk-summary-list__value" style="font-family:monospace">10091234568</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-uprn" style="font-family:monospace">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Property type</dt>
@@ -658,11 +671,11 @@
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Compliance status</dt>
-                    <dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-compliance-status">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Last inspection</dt>
-                    <dd class="govuk-summary-list__value" style="color:#d4351c">November 2023 (547 days ago)</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-last-inspection">—</dd>
                   </div>
                 </dl>
               </div>
@@ -671,15 +684,15 @@
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Name</dt>
-                    <dd class="govuk-summary-list__value">James Whitfield</dd>
+                    <dd class="govuk-summary-list__value" id="cf-tenant-name">—</dd>
                   </div>
-                  <div class="govuk-summary-list__row">
+                  <div class="govuk-summary-list__row" id="cf-tenancy-started-row" style="display:none">
                     <dt class="govuk-summary-list__key">Tenancy started</dt>
-                    <dd class="govuk-summary-list__value">14 March 2019</dd>
+                    <dd class="govuk-summary-list__value" id="cf-tenancy-started">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Active STAIRS requests</dt>
-                    <dd class="govuk-summary-list__value"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041 — due 8 May 2025</a></dd>
+                    <dd class="govuk-summary-list__value" id="cf-active-stairs-dd">Loading…</dd>
                   </div>
                 </dl>
               </div>
@@ -852,7 +865,7 @@
               </thead>
               <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2025-0041</a></td>
+                  <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('request-detail');return false;">FOI-2026-0041</a></td>
                   <td class="govuk-table__cell">Repairs history</td>
                   <td class="govuk-table__cell">5 Apr 2025</td>
                   <td class="govuk-table__cell app-deadline--urgent">8 May 2025</td>
@@ -952,7 +965,7 @@
   <div class="chat-screen" id="chatScreen" style="display: none;">
 
     <div class="chat-body">
-      <p>
+      <p id="chat-intro">
         <strong>Agent:</strong>
         Hello Sarah. I can search across all property records, compliance data, repair history, and documents using natural language. What would you like to know?
       </p>
@@ -970,7 +983,7 @@
     </div>
       <div class="chat-footer">
 
-        <textarea id="chat-input"placeholder="Type your message..."></textarea>
+        <textarea id="chat-input" placeholder="Type your message..."></textarea>
 
         <!--Buttons to send or clear messsage in chat-->
         <div class="chat-footer-buttons">
@@ -985,7 +998,6 @@
 
   </div>
 
-</div>
 </div>
 
 <!-- Modal for chat results-->
@@ -1153,6 +1165,8 @@
               <strong class="govuk-tag govuk-tag--red">Non-compliant</strong>
             </td>
 
+            <td class="govuk-table__cell">Gas safety certificate expired</td>
+
             <td class="govuk-table__cell">
               <button type="button" onclick="showScreen('casefile'); closeComplianceModal(); return false;" class="govuk-button govuk-button--secondary govuk-button--small govuk-!-margin-bottom-0">View file</button>
             </td>
@@ -1273,7 +1287,352 @@
   </div>
 </div>
   <!-- Script to handle Javascript-->
-  <script src="js/mockResponses.js"></script>
   <script src="js/script.js"></script>
+  <script>
+    // ── STAIRS requests data fetching ──────────────
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function daysRemaining(iso) {
+      const due = new Date(iso + 'T00:00:00');
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      return Math.round((due - today) / 86400000);
+    }
+
+    function deadlineClass(days) {
+      if (days <= 3) return 'app-deadline--urgent';
+      if (days <= 7) return 'app-deadline--soon';
+      return 'app-deadline--ok';
+    }
+
+    function statusTag(status) {
+      const colours = {
+        'Open':        'govuk-tag--blue',
+        'In Review':   'govuk-tag--purple',
+        'Redacting':   'govuk-tag--yellow',
+        'Responded':   'govuk-tag--green',
+        'Closed':      'govuk-tag--grey',
+        'In review':   'govuk-tag--purple',
+        'Discovering': 'govuk-tag--light-blue',
+        'Released':    'govuk-tag--green',
+      };
+      const cls = colours[status] || 'govuk-tag--blue';
+      return `<strong class="govuk-tag ${cls}">${status}</strong>`;
+    }
+
+    function deadlineText(iso, released) {
+      if (released) return fmtDate(iso);
+      const days = daysRemaining(iso);
+      if (days < 0) return `${fmtDate(iso)} <span style="color:#d4351c;font-weight:700">(overdue)</span>`;
+      return `${fmtDate(iso)} (${days} day${days === 1 ? '' : 's'})`;
+    }
+
+    function buildDashboardRow(r) {
+      const days = daysRemaining(r.due_date);
+      const cls = days < 0 ? 'app-deadline--urgent' : deadlineClass(days);
+      return `<tr class="govuk-table__row">
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText(r.due_date, false)}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+      </tr>`;
+    }
+
+    function buildRequestsRow(r) {
+      const released = !!r.response_date;
+      const days = released ? null : daysRemaining(r.due_date);
+      const cls = days !== null ? (days < 0 ? 'app-deadline--urgent' : deadlineClass(days)) : '';
+      const rowStyle = released ? ' style="color:#505a5f"' : '';
+      const actionLabel = (!released && r.status === 'In Review') ? 'Review' : 'View';
+      return `<tr class="govuk-table__row"${rowStyle}>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${r.request_reference}</a></td>
+        <td class="govuk-table__cell">${r.first_name} ${r.last_name}</td>
+        <td class="govuk-table__cell">${r.address_line_1}</td>
+        <td class="govuk-table__cell">${r.request_type || '—'}</td>
+        <td class="govuk-table__cell">${fmtDate(r.request_date)}</td>
+        <td class="govuk-table__cell ${cls}">${deadlineText(r.due_date, released)}</td>
+        <td class="govuk-table__cell">${statusTag(r.status)}</td>
+        <td class="govuk-table__cell"><a class="govuk-link" href="#">${actionLabel}</a></td>
+      </tr>`;
+    }
+
+    async function loadDashboardSummary() {
+      try {
+        const res = await fetch('/dashboard-summary');
+
+        if (!res.ok) return;
+
+        const summary = await res.json();
+
+        const nonCompliant = document.getElementById('dashboard-non-compliant');
+
+        if (nonCompliant) {
+          nonCompliant.textContent = summary.non_compliant_properties ?? '0';
+        }
+
+        const overdueInspections = document.getElementById('dashboard-overdue-inspections');
+
+        if (overdueInspections) {
+          overdueInspections.textContent = summary.overdue_inspections ?? '0';
+        }
+
+        const activeStairs = document.getElementById('dashboard-active-stairs');
+
+        if (activeStairs) {
+          activeStairs.textContent = summary.active_stairs_requests ?? '0';
+        }
+
+        const stairsDueDetail = document.getElementById('dashboard-stairs-due-detail');
+
+        if (stairsDueDetail) {
+          stairsDueDetail.textContent =
+            `${summary.stairs_due_within_7_days ?? 0} due within 7 days`;
+        }
+
+        const complianceRate = document.getElementById('dashboard-compliance-rate');
+
+        if (complianceRate) {
+          complianceRate.textContent =
+            `${summary.portfolio_compliance_rate ?? 0}%`;
+        }
+
+      } catch (e) {
+        console.error('Failed to load dashboard summary:', e);
+      }
+    }
+
+    async function loadStairsRequests() {
+      try {
+        const res = await fetch('/stairs-requests');
+        if (!res.ok) return;
+        const requests = await res.json();
+
+        const active = requests.filter(r => !r.response_date);
+        const dueWithin7 = active.filter(r => { const d = daysRemaining(r.due_date); return d >= 0 && d <= 7; });
+        const released30 = requests.filter(r => {
+          if (!r.response_date) return false;
+          const d = new Date(r.response_date + 'T00:00:00');
+          const today = new Date(); today.setHours(0, 0, 0, 0);
+          return (today - d) / 86400000 <= 30;
+        });
+
+        const statActiveDash = document.getElementById('stat-active-stairs');
+        if (statActiveDash) statActiveDash.textContent = active.length;
+
+        const statTotal = document.getElementById('stat-requests-total');
+        if (statTotal) statTotal.textContent = active.length;
+        const statDue7 = document.getElementById('stat-requests-due7');
+        if (statDue7) statDue7.textContent = dueWithin7.length;
+        const statReleased = document.getElementById('stat-requests-released');
+        if (statReleased) statReleased.textContent = released30.length;
+
+        const dashTbody = document.getElementById('tbody-dashboard-stairs');
+        if (dashTbody) dashTbody.innerHTML = active.slice(0, 4).map(buildDashboardRow).join('');
+
+        const reqTbody = document.getElementById('tbody-requests-stairs');
+        if (reqTbody) reqTbody.innerHTML = requests.map(buildRequestsRow).join('');
+      } catch (e) {
+        console.error('Failed to load STAIRS requests:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardSummary();
+      loadStairsRequests();
+    });
+
+    // ── Case file Overview tab ─────────────────────
+    let currentPropertyId = 4;
+
+    function showCaseFile(propertyId) {
+      currentPropertyId = propertyId;
+      showScreen('casefile');
+      loadCaseFileOverview(propertyId);
+    }
+
+    function findPropertyObject(data) {
+      if (!data) return null;
+
+      if (Array.isArray(data)) {
+        return data.find(item =>
+          item && (
+            item.address_line_1 ||
+            item.address ||
+            item.uprn ||
+            item.UPRN ||
+            item.compliance_status
+          )
+        );
+      }
+
+      if (
+        data.address_line_1 ||
+        data.address ||
+        data.uprn ||
+        data.UPRN ||
+        data.compliance_status
+      ) {
+        return data;
+      }
+
+      return (
+        findPropertyObject(data.overview) ||
+        findPropertyObject(data.property) ||
+        findPropertyObject(data.property_details) ||
+        findPropertyObject(data.propertyDetails) ||
+        findPropertyObject(data.case_file) ||
+        findPropertyObject(data.caseFile) ||
+        findPropertyObject(data.rows) ||
+        findPropertyObject(data.data)
+      );
+    }
+
+    async function loadCaseFileOverview(propertyId) {
+      const dd = document.getElementById('cf-active-stairs-dd');
+
+      try {
+        const res = await fetch(`/properties/${propertyId}/case-file`);
+
+        if (!res.ok) {
+          if (dd) dd.textContent = 'Unavailable';
+          return;
+        }
+
+        const data = await res.json();
+        console.log('Case file response JSON:', JSON.stringify(data, null, 2));
+
+        const property = findPropertyObject(data);
+
+        if (!property) {
+          console.error('No property object found in case file response:', data);
+          setText('cf-detail-address', 'Unavailable');
+          setText('cf-detail-uprn', 'Unavailable');
+          setText('cf-detail-last-inspection', 'Unavailable');
+          setHtml('cf-detail-compliance-status', '<strong class="govuk-tag govuk-tag--grey">Unknown</strong>');
+          return;
+        }
+
+        const addressLine = property.address_line_1 || property.address || property.addressLine1;
+        const city = property.city;
+        const postcode = property.postcode;
+        const uprn = property.uprn || property.UPRN;
+        const complianceStatus = property.compliance_status || property.complianceStatus || 'Unknown';
+        const lastInspectionDate = property.last_inspection_date || property.lastInspectionDate;
+
+        const address = [addressLine, city, postcode].filter(Boolean).join(', ');
+
+        let complianceClass = 'govuk-tag--grey';
+
+        if (complianceStatus === 'Non-Compliant') {
+          complianceClass = 'govuk-tag--red';
+        } else if (complianceStatus === 'Inspection Due') {
+          complianceClass = 'govuk-tag--yellow';
+        } else if (complianceStatus === 'Compliant') {
+          complianceClass = 'govuk-tag--green';
+        }
+
+        setText('cf-detail-address', address || '—');
+        setText('cf-detail-uprn', uprn || '—');
+
+        setHtml(
+          'cf-detail-compliance-status',
+          `<strong class="govuk-tag ${complianceClass}">${complianceStatus}</strong>`
+        );
+
+        setText(
+          'cf-detail-last-inspection',
+          lastInspectionDate ? fmtDate(lastInspectionDate) : '—'
+        );
+
+        document.getElementById('cf-breadcrumb-address').textContent =
+          addressLine || 'Property case file';
+
+        document.getElementById('cf-uprn-heading').textContent =
+          `UPRN ${uprn || '—'}`;
+
+        document.getElementById('cf-address-heading').textContent =
+          address || 'Property case file';
+
+        const complianceTag = document.getElementById('cf-header-compliance-status');
+
+        if (complianceTag) {
+          complianceTag.textContent = complianceStatus;
+          complianceTag.className = `govuk-tag govuk-!-margin-right-2 govuk-!-margin-bottom-1 ${complianceClass}`;
+        }
+
+        const inspectionTag = document.getElementById('cf-header-inspection-status');
+
+        if (inspectionTag) {
+          if (complianceStatus === 'Non-Compliant') {
+            inspectionTag.style.display = 'inline-block';
+            inspectionTag.textContent = 'Overdue inspection';
+          } else if (complianceStatus === 'Inspection Due') {
+            inspectionTag.style.display = 'none';
+          } else {
+            inspectionTag.style.display = 'none';
+          }
+        }
+
+        const foiRequests =
+          data.foi_requests ||
+          data.foiRequests ||
+          data.case_file?.foi_requests ||
+          data.caseFile?.foiRequests ||
+          [];
+
+        const firstRequest = foiRequests[0];
+
+        if (firstRequest) {
+          const tenantName = [
+            firstRequest.first_name || firstRequest.firstName,
+            firstRequest.last_name || firstRequest.lastName
+          ].filter(Boolean).join(' ');
+
+          setText('cf-tenant-name', tenantName || '—');
+        } else {
+          setText('cf-tenant-name', '—');
+        }
+
+        setText('cf-tenancy-started', '—');
+
+        const active = foiRequests.filter(r => !r.response_date && !r.responseDate);
+
+        const stairsTag = document.getElementById('cf-header-stairs-status');
+
+        if (stairsTag) {
+          stairsTag.textContent =
+            active.length > 0 ? 'Active STAIRS request' : 'No active STAIRS request';
+        }
+
+        if (!dd) return;
+
+        if (active.length === 0) {
+          dd.textContent = 'None';
+        } else {
+          dd.innerHTML = active.map(r =>
+            `<a class="govuk-link" href="#">${r.request_reference || r.requestReference} — due ${fmtDate(r.due_date || r.dueDate)}</a>`
+          ).join('<br>');
+        }
+
+      } catch (e) {
+        console.error('Failed to load case file overview:', e);
+        if (dd) dd.textContent = 'Unavailable';
+      }
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value || '—';
+    }
+
+    function setHtml(id, html) {
+      const element = document.getElementById(id);
+      if (element) element.innerHTML = html || '—';
+    }
+  </script>
 </body>
 </html>

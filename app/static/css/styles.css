@@ -4,9 +4,7 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   Typography
-========================= */
+/* Typography */
 
 body,
 .govuk-body,
@@ -26,9 +24,7 @@ body,
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
 }
 
-/* =========================
-   Dashboard stat cards
-========================= */
+/*  Dashboard stat cards */
 
 .app-stat-card {
   background: white;
@@ -83,9 +79,7 @@ body,
   color: #505a5f;
 }
 
-/* =========================
-   Screen toggle
-========================= */
+/* Screen toggle */
 
 .app-screen {
   display: none;
@@ -95,9 +89,7 @@ body,
   display: block;
 }
 
-/* =========================
-   Stepper
-========================= */
+/* Stepper */
 
 .app-stepper {
   display: flex;
@@ -165,9 +157,7 @@ body,
   font-weight: 700;
 }
 
-/* =========================
-   Suggested chips
-========================= */
+/* Suggested chips */
 
 .app-chips {
   display: flex;
@@ -191,9 +181,7 @@ body,
   color: #fff;
 }
 
-/* =========================
-   Deadline helpers
-========================= */
+/* Deadline helpers */
 
 .app-deadline--urgent {
   color: #d4351c;
@@ -209,9 +197,7 @@ body,
   color: #005a30;
 }
 
-/* =========================
-   Navigation
-========================= */
+/* Navigation */
 
 .govuk-service-navigation__item--active .govuk-service-navigation__link {
   font-weight: 700;
@@ -228,9 +214,7 @@ body,
   gap: 40px;
 }
 
-/* =========================
-   Header
-========================= */
+/* Header */
 
 .govuk-header__content {
   display: flex;
@@ -273,9 +257,7 @@ body,
   object-fit: cover;
 }
 
-/* =========================
-   Chat popup
-========================= */
+/* Chat popup */
 
 .chat-icon {
   position: fixed;
@@ -401,9 +383,7 @@ body,
   color: #fff;
 }
 
-/* =========================
-   Chat footer
-========================= */
+/* Chat footer */
 
 .chat-footer {
   padding: 15px;
@@ -453,9 +433,7 @@ body,
   background: #aa2a16;
 }
 
-/* =========================
-   Start screen
-========================= */
+/* Start screen */
 
 .chat-start-screen {
   padding: 20px;
@@ -482,9 +460,7 @@ body,
   object-fit: contain;
 }
 
-/* =========================
-   Results modal
-========================= */
+/* Results modal */
 
 .results-modal,
 .table-modal {
@@ -539,9 +515,7 @@ body,
   max-height: 70vh;
 }
 
-/* =========================
-   Alerts & sections
-========================= */
+/* Alerts & sections */
 
 .app-section-divider {
   border: 0;
@@ -565,9 +539,7 @@ body,
   margin-bottom: 80px;
 }
 
-/* =========================
-   Case file tags
-========================= */
+/* Case file tags */
 
 .app-casefile-tags {
   display: flex;
@@ -592,9 +564,7 @@ body,
   padding: 10px 14px;
 }
 
-/* =========================
-   Small buttons
-========================= */
+/* Small buttons */
 
 .table-modal .govuk-button--small {
   padding: 4px 10px;
