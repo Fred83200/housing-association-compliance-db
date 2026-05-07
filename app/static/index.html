@@ -26,23 +26,36 @@
 
     <div class="govuk-header__logo">
 
-      <!--  Clickable home icon -->
       <a href="#" class="govuk-header__link govuk-header__link--homepage" onclick="showScreen('dashboard');return false;">
         <img src="images/white-home.png" alt="Home" class="app-home-icon">
       </a>
 
-      <span class="govuk-header__link govuk-header__service-name">Greenfields Housing</span>
+      <span class="govuk-header__link govuk-header__service-name">
+        Greenfields Housing
+      </span>
+
       <span class="app-header-divider">|</span>
 
-   <div class="govuk-header__content">
-      <span class="govuk-header__link govuk-header__service-name">STAIRS Response Agent</span>
+      <span class="govuk-header__link govuk-header__service-name">
+        STAIRS Response Agent
+      </span>
+
+    </div>
+
+    <div class="govuk-header__content">
 
       <nav aria-label="Account" class="govuk-header__navigation app-account-nav">
+
         <div class="app-profile">
           <img src="images/user-image.png" alt="Sarah Barnes" class="app-profile__image">
-          <span class="govuk-header__link">Sarah Barnes</span>
+
+          <span class="govuk-header__link">
+            Sarah Barnes
+          </span>
         </div>
+
       </nav>
+
     </div>
 
   </div>
@@ -132,32 +145,10 @@
         <div class="app-stat-card__label">
           Non-compliant properties
         </div>
-        
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Active STAIRS Requests</h5>
-        <p class="card-text">Click the button below to view the active STAIRS requests. You can quick view a number or view all.</p>
-        <button type="button" onclick="openStairsRequestModal()" class="btn btn-primary">Quick view</button>
-        <a href="#" onclick="showScreen('requests');return false;" class="btn btn-primary">View all</a>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Properties requiring attention</h5>
-        <p class="card-text">Click the button below to view properties requiring attention. You can quick view a number or view all.</p>
-        <button type="button" onclick="openComplianceModal()" class="btn btn-primary">Quick view</button>
-        <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
-      </div>
-    </div>
-  </div>
-</div>       
 
-        <div class="app-stat-card__value">
-          7
+
+        <div class="app-stat-card__value" id="dashboard-non-compliant">
+          -
         </div>
 
         <div class="app-stat-card__detail">
@@ -179,8 +170,8 @@
           Overdue inspections
         </div>
 
-        <div class="app-stat-card__value">
-          14
+        <div class="app-stat-card__value" id="dashboard-overdue-inspections">
+          -
         </div>
 
         <div class="app-stat-card__detail">
@@ -202,12 +193,12 @@
           Active STAIRS requests
         </div>
 
-        <div class="app-stat-card__value">
-          4
+        <div class="app-stat-card__value" id="dashboard-active-stairs">
+          -
         </div>
 
-        <div class="app-stat-card__detail">
-          2 due within 7 days
+        <div class="app-stat-card__detail" id="dashboard-stairs-due-detail">
+          -
         </div>
 
       </div>
@@ -226,8 +217,8 @@
           Portfolio compliance rate
         </div>
 
-        <div class="app-stat-card__value">
-          91%
+        <div class="app-stat-card__value" id="dashboard-compliance-rate">
+          -
         </div>
 
         <div class="app-stat-card__detail">
@@ -382,7 +373,7 @@
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Property</dt>
-                <dd class="govuk-summary-list__value">14 Birchwood Avenue, Manchester, M21 4EL</dd>
+                <dd class="govuk-summary-list__value">—</dd>
               </div>
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">Request type</dt>
@@ -592,27 +583,31 @@
         </table>
       </div>
 
-      <!-- ─── PROPERTY CASE FILE ───────────────────── -->
-      <div class="app-screen" id="screen-casefile">
-        <nav class="govuk-breadcrumbs govuk-!-margin-bottom-0" aria-label="Breadcrumb">
-          <ol class="govuk-breadcrumbs__list">
-            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" onclick="showScreen('dashboard');return false;">Overview</a></li>
-            <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href="#" onclick="showScreen('compliance');return false;">Compliance</a></li>
-            <li class="govuk-breadcrumbs__list-item" aria-current="page">14 Birchwood Avenue</li>
-          </ol>
-        </nav>
+    <!-- ─── PROPERTY CASE FILE ───────────────────── -->
+    <div class="app-screen" id="screen-casefile">
+      <nav class="govuk-breadcrumbs govuk-!-margin-bottom-0" aria-label="Breadcrumb">
+        <ol class="govuk-breadcrumbs__list">
+          <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="#" onclick="showScreen('dashboard');return false;">Overview</a>
+          </li>
+          <li class="govuk-breadcrumbs__list-item">
+            <a class="govuk-breadcrumbs__link" href="#" onclick="showScreen('compliance');return false;">Compliance</a>
+          </li>
+          <li class="govuk-breadcrumbs__list-item" aria-current="page" id="cf-breadcrumb-address">Property case file</li>
+        </ol>
+      </nav>
 
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <span class="govuk-caption-xl">UPRN 10091234568</span>
-            <h1 class="govuk-heading-xl">14 Birchwood Avenue, Manchester, M21 4EL</h1>
-          </div>
-          <div class="govuk-grid-column-one-third" style="padding-top:20px">
-            <strong class="govuk-tag govuk-tag--red govuk-!-margin-right-2">Non-compliant</strong>
-            <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-right-2">Overdue inspection</strong>
-            <strong class="govuk-tag govuk-tag--purple govuk-!-margin-top-2" style="display:inline-block">Active STAIRS request</strong>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <span class="govuk-caption-xl" id="cf-uprn-heading">UPRN —</span>
+          <h1 class="govuk-heading-xl" id="cf-address-heading">Loading property...</h1>
         </div>
+        <div class="govuk-grid-column-one-third" style="padding-top:20px">
+          <strong class="govuk-tag govuk-!-margin-right-2" id="cf-header-compliance-status">Loading</strong>
+          <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-right-2" id="cf-header-inspection-status">Inspection status</strong>
+          <strong class="govuk-tag govuk-tag--purple govuk-!-margin-top-2" id="cf-header-stairs-status" style="display:inline-block">STAIRS status</strong>
+        </div>
+      </div>
 
         <div class="govuk-tabs" data-module="govuk-tabs">
           <h2 class="govuk-tabs__title">Property information</h2>
@@ -642,11 +637,11 @@
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Address</dt>
-                    <dd class="govuk-summary-list__value">14 Birchwood Avenue, Manchester, M21 4EL</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-address">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">UPRN</dt>
-                    <dd class="govuk-summary-list__value" style="font-family:monospace">10091234568</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-uprn" style="font-family:monospace">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Property type</dt>
@@ -658,11 +653,11 @@
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Compliance status</dt>
-                    <dd class="govuk-summary-list__value"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-compliance-status">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Last inspection</dt>
-                    <dd class="govuk-summary-list__value" style="color:#d4351c">November 2023 (547 days ago)</dd>
+                    <dd class="govuk-summary-list__value" id="cf-detail-last-inspection">—</dd>
                   </div>
                 </dl>
               </div>
@@ -671,11 +666,11 @@
                 <dl class="govuk-summary-list">
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Name</dt>
-                    <dd class="govuk-summary-list__value">James Whitfield</dd>
+                    <dd class="govuk-summary-list__value" id="cf-tenant-name">—</dd>
                   </div>
-                  <div class="govuk-summary-list__row">
+                  <div class="govuk-summary-list__row" id="cf-tenancy-started-row" style="display:none">
                     <dt class="govuk-summary-list__key">Tenancy started</dt>
-                    <dd class="govuk-summary-list__value">14 March 2019</dd>
+                    <dd class="govuk-summary-list__value" id="cf-tenancy-started">—</dd>
                   </div>
                   <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Active STAIRS requests</dt>
@@ -951,7 +946,7 @@
   <div class="chat-screen" id="chatScreen" style="display: none;">
 
     <div class="chat-body">
-      <p>
+      <p id="chat-intro">
         <strong>Agent:</strong>
         Hello Sarah. I can search across all property records, compliance data, repair history, and documents using natural language. What would you like to know?
       </p>
@@ -969,7 +964,7 @@
     </div>
       <div class="chat-footer">
 
-        <textarea id="chat-input"placeholder="Type your message..."></textarea>
+        <textarea id="chat-input" placeholder="Type your message..."></textarea>
 
         <!--Buttons to send or clear messsage in chat-->
         <div class="chat-footer-buttons">
@@ -984,7 +979,6 @@
 
   </div>
 
-</div>
 </div>
 
 <!-- Modal for chat results-->
@@ -1277,7 +1271,6 @@
   </div>
 </div>
   <!-- Script to handle Javascript-->
-  <script src="js/mockResponses.js"></script>
   <script src="js/script.js"></script>
   <script>
     // ── STAIRS requests data fetching ──────────────
@@ -1351,6 +1344,51 @@
       </tr>`;
     }
 
+    async function loadDashboardSummary() {
+      try {
+        const res = await fetch('/dashboard-summary');
+
+        if (!res.ok) return;
+
+        const summary = await res.json();
+
+        const nonCompliant = document.getElementById('dashboard-non-compliant');
+
+        if (nonCompliant) {
+          nonCompliant.textContent = summary.non_compliant_properties ?? '0';
+        }
+
+        const overdueInspections = document.getElementById('dashboard-overdue-inspections');
+
+        if (overdueInspections) {
+          overdueInspections.textContent = summary.overdue_inspections ?? '0';
+        }
+
+        const activeStairs = document.getElementById('dashboard-active-stairs');
+
+        if (activeStairs) {
+          activeStairs.textContent = summary.active_stairs_requests ?? '0';
+        }
+
+        const stairsDueDetail = document.getElementById('dashboard-stairs-due-detail');
+
+        if (stairsDueDetail) {
+          stairsDueDetail.textContent =
+            `${summary.stairs_due_within_7_days ?? 0} due within 7 days`;
+        }
+
+        const complianceRate = document.getElementById('dashboard-compliance-rate');
+
+        if (complianceRate) {
+          complianceRate.textContent =
+            `${summary.portfolio_compliance_rate ?? 0}%`;
+        }
+
+      } catch (e) {
+        console.error('Failed to load dashboard summary:', e);
+      }
+    }
+
     async function loadStairsRequests() {
       try {
         const res = await fetch('/stairs-requests');
@@ -1386,7 +1424,10 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadStairsRequests);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardSummary();
+      loadStairsRequests();
+    });
 
     // ── Case file Overview tab ─────────────────────
     let currentPropertyId = 4;
@@ -1397,26 +1438,184 @@
       loadCaseFileOverview(propertyId);
     }
 
+    function findPropertyObject(data) {
+      if (!data) return null;
+
+      if (Array.isArray(data)) {
+        return data.find(item =>
+          item && (
+            item.address_line_1 ||
+            item.address ||
+            item.uprn ||
+            item.UPRN ||
+            item.compliance_status
+          )
+        );
+      }
+
+      if (
+        data.address_line_1 ||
+        data.address ||
+        data.uprn ||
+        data.UPRN ||
+        data.compliance_status
+      ) {
+        return data;
+      }
+
+      return (
+        findPropertyObject(data.overview) ||
+        findPropertyObject(data.property) ||
+        findPropertyObject(data.property_details) ||
+        findPropertyObject(data.propertyDetails) ||
+        findPropertyObject(data.case_file) ||
+        findPropertyObject(data.caseFile) ||
+        findPropertyObject(data.rows) ||
+        findPropertyObject(data.data)
+      );
+    }
+
     async function loadCaseFileOverview(propertyId) {
       const dd = document.getElementById('cf-active-stairs-dd');
-      if (!dd) return;
+
       try {
         const res = await fetch(`/properties/${propertyId}/case-file`);
-        if (!res.ok) { dd.textContent = 'Unavailable'; return; }
-        const data = await res.json();
 
-        const active = (data.foi_requests || []).filter(r => !r.response_date);
+        if (!res.ok) {
+          if (dd) dd.textContent = 'Unavailable';
+          return;
+        }
+
+        const data = await res.json();
+        console.log('Case file response JSON:', JSON.stringify(data, null, 2));
+
+        const property = findPropertyObject(data);
+
+        if (!property) {
+          console.error('No property object found in case file response:', data);
+          setText('cf-detail-address', 'Unavailable');
+          setText('cf-detail-uprn', 'Unavailable');
+          setText('cf-detail-last-inspection', 'Unavailable');
+          setHtml('cf-detail-compliance-status', '<strong class="govuk-tag govuk-tag--grey">Unknown</strong>');
+          return;
+        }
+
+        const addressLine = property.address_line_1 || property.address || property.addressLine1;
+        const city = property.city;
+        const postcode = property.postcode;
+        const uprn = property.uprn || property.UPRN;
+        const complianceStatus = property.compliance_status || property.complianceStatus || 'Unknown';
+        const lastInspectionDate = property.last_inspection_date || property.lastInspectionDate;
+
+        const address = [addressLine, city, postcode].filter(Boolean).join(', ');
+
+        let complianceClass = 'govuk-tag--grey';
+
+        if (complianceStatus === 'Non-Compliant') {
+          complianceClass = 'govuk-tag--red';
+        } else if (complianceStatus === 'Inspection Due') {
+          complianceClass = 'govuk-tag--yellow';
+        } else if (complianceStatus === 'Compliant') {
+          complianceClass = 'govuk-tag--green';
+        }
+
+        setText('cf-detail-address', address || '—');
+        setText('cf-detail-uprn', uprn || '—');
+
+        setHtml(
+          'cf-detail-compliance-status',
+          `<strong class="govuk-tag ${complianceClass}">${complianceStatus}</strong>`
+        );
+
+        setText(
+          'cf-detail-last-inspection',
+          lastInspectionDate ? fmtDate(lastInspectionDate) : '—'
+        );
+
+        document.getElementById('cf-breadcrumb-address').textContent =
+          addressLine || 'Property case file';
+
+        document.getElementById('cf-uprn-heading').textContent =
+          `UPRN ${uprn || '—'}`;
+
+        document.getElementById('cf-address-heading').textContent =
+          address || 'Property case file';
+
+        const complianceTag = document.getElementById('cf-header-compliance-status');
+
+        if (complianceTag) {
+          complianceTag.textContent = complianceStatus;
+          complianceTag.className = `govuk-tag govuk-!-margin-right-2 govuk-!-margin-bottom-1 ${complianceClass}`;
+        }
+
+        const inspectionTag = document.getElementById('cf-header-inspection-status');
+
+        if (inspectionTag) {
+          if (complianceStatus === 'Non-Compliant') {
+            inspectionTag.style.display = 'inline-block';
+            inspectionTag.textContent = 'Overdue inspection';
+          } else if (complianceStatus === 'Inspection Due') {
+            inspectionTag.style.display = 'none';
+          } else {
+            inspectionTag.style.display = 'none';
+          }
+        }
+
+        const foiRequests =
+          data.foi_requests ||
+          data.foiRequests ||
+          data.case_file?.foi_requests ||
+          data.caseFile?.foiRequests ||
+          [];
+
+        const firstRequest = foiRequests[0];
+
+        if (firstRequest) {
+          const tenantName = [
+            firstRequest.first_name || firstRequest.firstName,
+            firstRequest.last_name || firstRequest.lastName
+          ].filter(Boolean).join(' ');
+
+          setText('cf-tenant-name', tenantName || '—');
+        } else {
+          setText('cf-tenant-name', '—');
+        }
+
+        setText('cf-tenancy-started', '—');
+
+        const active = foiRequests.filter(r => !r.response_date && !r.responseDate);
+
+        const stairsTag = document.getElementById('cf-header-stairs-status');
+
+        if (stairsTag) {
+          stairsTag.textContent =
+            active.length > 0 ? 'Active STAIRS request' : 'No active STAIRS request';
+        }
+
+        if (!dd) return;
+
         if (active.length === 0) {
           dd.textContent = 'None';
         } else {
           dd.innerHTML = active.map(r =>
-            `<a class="govuk-link" href="#">${r.request_reference} — due ${fmtDate(r.due_date)}</a>`
+            `<a class="govuk-link" href="#">${r.request_reference || r.requestReference} — due ${fmtDate(r.due_date || r.dueDate)}</a>`
           ).join('<br>');
         }
+
       } catch (e) {
         console.error('Failed to load case file overview:', e);
-        dd.textContent = 'Unavailable';
+        if (dd) dd.textContent = 'Unavailable';
       }
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value || '—';
+    }
+
+    function setHtml(id, html) {
+      const element = document.getElementById(id);
+      if (element) element.innerHTML = html || '—';
     }
   </script>
 </body>

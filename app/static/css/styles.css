@@ -23,7 +23,7 @@
 
       margin-top: 10px;
 
-      max-height: 200px;
+      max-height: 320px;
       overflow-y: auto;
     }
     .app-chat-msg { margin-bottom: 15px; display: flex; gap: 10px; }
@@ -228,7 +228,7 @@
 .chat-body {
   padding: 20px;
 
-  max-height: 420px;
+  max-height: 500px;
 
   overflow-y: auto;
 }
@@ -385,15 +385,20 @@
   position: fixed;
   inset: 0;
   z-index: 10000;
+
+  align-items: center;
+  justify-content: center;
+
   background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
 }
 
 .results-modal__content {
   background: white;
-  width: 80%;
-  max-width: 900px;
-  max-height: 80vh;
-  margin: 8vh auto;
+  width: 95%;
+  max-width: 1400px;
+  max-height: 85vh;
+
   border-radius: 12px;
   overflow: hidden;
 }
@@ -421,9 +426,26 @@
 
 .results-modal__body {
   padding: 20px;
-  overflow-x: auto;
-  max-height: 65vh;
+
+  max-height: 70vh;
+  overflow: auto;
 }
+
+.results-modal__body table {
+  min-width: 900px;
+}
+
+.results-modal__body thead th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+.results-modal__body .govuk-table__row:hover {
+  background-color: #f3f2f1;
+}
+
 .app-account-nav {
   margin-left: auto;
 }
@@ -686,4 +708,22 @@
   margin-bottom: 0;
 
   box-shadow: 0 2px 0 #929191;
+}
+
+.app-ai-response {
+  max-width: 100%;
+}
+
+.app-ai-response__summary {
+  background: #f3f2f1;
+  border-left: 5px solid #1d70b8;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.app-chat-followups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
