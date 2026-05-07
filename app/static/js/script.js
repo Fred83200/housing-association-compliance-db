@@ -106,3 +106,10 @@ function closeComplianceModal() {
   document.getElementById('complianceModal').style.display = 'none';
 }
 
+function openNonCompliantModal() {
+  document.getElementById('nonCompliantModal').style.display = 'block';
+}
+
+function closeNonCompliantModal() {
+  document.getElementById('nonCompliantModal').style.display = 'none';
+}
