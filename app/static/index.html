@@ -1131,10 +1131,12 @@
       </table>
 <div style="display:flex; justify-content:flex-end;">
   <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('requests'); closeStairsRequestModal(); return false;">View all</button>
-</div>
+  </div>
+
+    </div>
   </div>
 </div>
-</div>
+
 <!-- Compliance modal-->
 
 <!-- Properties requiring attention modal -->
@@ -1209,7 +1211,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <!-- Non-compliant properties modal -->
 <div id="nonCompliantModal" class="table-modal">
@@ -1289,6 +1291,7 @@
   <!-- Script to handle Javascript-->
   <script src="js/script.js"></script>
   <script>
+    
     // ── STAIRS requests data fetching ──────────────
     function fmtDate(iso) {
       if (!iso) return '—';
