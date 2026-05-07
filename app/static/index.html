@@ -50,7 +50,6 @@
 
   <!-- ═══ SERVICE NAVIGATION ════════════════════════ -->
   <section aria-label="Service information">
-    <div class="govuk-width-container">
       <nav class="govuk-service-navigation" data-module="govuk-service-navigation">
         <div class="govuk-service-navigation__container">
           <ul class="govuk-service-navigation__list" id="nav-list">
@@ -69,7 +68,6 @@
           </ul>
         </div>
       </nav>
-    </div>
   </section>
 
   <!-- ═══ PHASE BANNER ══════════════════════════════ -->
@@ -132,29 +130,6 @@
         <div class="app-stat-card__label">
           Non-compliant properties
         </div>
-        
-<div class="row">
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Active STAIRS Requests</h5>
-        <p class="card-text">Click the button below to view the active STAIRS requests. You can quick view a number or view all.</p>
-        <button type="button" onclick="openStairsRequestModal()" class="btn btn-primary">Quick view</button>
-        <a href="#" onclick="showScreen('requests');return false;" class="btn btn-primary">View all</a>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Properties requiring attention</h5>
-        <p class="card-text">Click the button below to view properties requiring attention. You can quick view a number or view all.</p>
-        <button type="button" onclick="openComplianceModal()" class="btn btn-primary">Quick view</button>
-        <a  href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
-      </div>
-    </div>
-  </div>
-</div>       
 
         <div class="app-stat-card__value">
           7
@@ -274,37 +249,44 @@
         <hr class="app-section-divider">  
 
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
+
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
+             <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Total active</div>
               <div class="app-stat-card__value" id="stat-requests-total">4</div>
             </div>
           </div>
-
+        </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
+              <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Due within 7 days</div>
               <div class="app-stat-card__value" id="stat-requests-due7">2</div>
+            </div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--green">
+              <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Released (30 days)</div>
               <div class="app-stat-card__value" id="stat-requests-released">12</div>
+            </div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
+              <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Avg. handling time</div>
               <div class="app-stat-card__value">4.2 <span style="font-size:1.25rem;font-weight:400">days</span></div>
+            </div>
             </div>
           </div>
         </div>
         <hr class="app-section-divider">  
 
         <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--m">All requests</caption>
-          <thead class="govuk-table__head">
+            <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               <th class="govuk-table__header" scope="col">Reference</th>
               <th class="govuk-table__header" scope="col">Tenant</th>
@@ -328,8 +310,12 @@
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
+                    <hr class="app-section-divider">   
+
             <span class="govuk-caption-xl">STAIRS request</span>
             <h1 class="govuk-heading-xl">FOI-2025-0041</h1>
+                    <hr class="app-section-divider">   
+
           </div>
           <div class="govuk-grid-column-one-third" style="text-align:right;padding-top:20px">
             <strong class="govuk-tag govuk-tag--red govuk-!-margin-bottom-2">Urgent — 3 days remaining</strong>
@@ -366,6 +352,7 @@
             </div>
           </div>
         </div>
+        <hr class="app-section-divider">   
 
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
@@ -467,53 +454,59 @@
   <hr class="app-section-divider">
 
   <!-- Compliance alert -->
-  <div class="app-urgent-alert" id="complianceAlert">
+ <div class="app-urgent-alert" id="complianceAlert">
 
-    <div class="app-urgent-alert__content">
-
-      <strong>Compliance alert:</strong>
-
-      7 properties are currently non-compliant and require action.
-
-      <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="openNonCompliantModal(); return false;">Review properties</button>   
-    </div>
-
+  <div class="app-urgent-alert__content">
+    <strong>Compliance alert:</strong> 7 properties are currently non-compliant and require action.
   </div>
 
+  <div class="app-urgent-alert__actions">
+    <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="openNonCompliantModal(); return false;">Review properties</button>
+  </div>
+
+</div>
+
   <hr class="app-section-divider">
-        <hr class="app-section-divider">  
 
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
+
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
+            <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Non-compliant</div>
               <div class="app-stat-card__value">7</div>
+            </div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--yellow">
+            <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Overdue inspections</div>
               <div class="app-stat-card__value">14</div>
+            </div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--red">
+            <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Gas safety expired</div>
               <div class="app-stat-card__value">3</div>
+            </div>
             </div>
           </div>
           <div class="govuk-grid-column-one-quarter">
             <div class="app-stat-card app-stat-card--blue">
+            <div class="app-stat-card__content">
               <div class="app-stat-card__label govuk-body-s">Inspections scheduled</div>
               <div class="app-stat-card__value">5</div>
+              </div>
             </div>
           </div>
         </div>
         <hr class="app-section-divider">  
 
         <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--m">Non-compliant properties</caption>
-          <thead class="govuk-table__head">
+            <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               <th class="govuk-table__header" scope="col">UPRN</th>
               <th class="govuk-table__header" scope="col">Address</th>
@@ -527,66 +520,66 @@
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234568</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">14 Birchwood Ave, Manchester</a></td>
+              <td class="govuk-table__cell">14 Birchwood Ave, Manchester</td>
               <td class="govuk-table__cell">Gas safety certificate expired</td>
               <td class="govuk-table__cell">Nov 2023</td>
               <td class="govuk-table__cell app-deadline--urgent">547</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showScreen('casefile');return false;">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>         
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234581</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">8 Maple Court, Salford</a></td>
+              <td class="govuk-table__cell">8 Maple Court, Salford</td>
               <td class="govuk-table__cell">Fire alarm inspection overdue</td>
               <td class="govuk-table__cell">Feb 2024</td>
               <td class="govuk-table__cell app-deadline--urgent">426</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234595</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">19 Primrose Way, Bolton</a></td>
+              <td class="govuk-table__cell">19 Primrose Way, Bolton</td>
               <td class="govuk-table__cell">Gas safety certificate expired</td>
               <td class="govuk-table__cell">Dec 2023</td>
               <td class="govuk-table__cell app-deadline--urgent">517</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234602</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">4 Thornton Gardens, Bury</a></td>
+              <td class="govuk-table__cell">4 Thornton Gardens, Bury</td>
               <td class="govuk-table__cell">Legionella risk assessment overdue</td>
               <td class="govuk-table__cell">Oct 2023</td>
               <td class="govuk-table__cell app-deadline--urgent">578</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234614</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">31 Laburnum Drive, Wigan</a></td>
+              <td class="govuk-table__cell">31 Laburnum Drive, Wigan</td>
               <td class="govuk-table__cell">EPC rating below E</td>
               <td class="govuk-table__cell">Jan 2024</td>
               <td class="govuk-table__cell app-deadline--soon">365</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234628</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">6 Cedar Close, Stockport</a></td>
+              <td class="govuk-table__cell">6 Cedar Close, Stockport</td>
               <td class="govuk-table__cell">Gas safety certificate expired</td>
               <td class="govuk-table__cell">Mar 2024</td>
               <td class="govuk-table__cell app-deadline--soon">365</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
             <tr class="govuk-table__row">
               <td class="govuk-table__cell" style="font-family:monospace">10091234637</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">2 Ash Lane, Rochdale</a></td>
+              <td class="govuk-table__cell">2 Ash Lane, Rochdale</td>
               <td class="govuk-table__cell">Damp &amp; mould assessment overdue</td>
               <td class="govuk-table__cell">Feb 2024</td>
               <td class="govuk-table__cell app-deadline--soon">365</td>
               <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">At risk</strong></td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">Case file</a></td>
+              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('casefile'); return false;">View file</button></td>            
             </tr>
           </tbody>
         </table>
@@ -601,18 +594,25 @@
             <li class="govuk-breadcrumbs__list-item" aria-current="page">14 Birchwood Avenue</li>
           </ol>
         </nav>
-
+          <hr class="app-section-divider">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-two-thirds">
             <span class="govuk-caption-xl">UPRN 10091234568</span>
+                      <hr class="app-section-divider">
+
             <h1 class="govuk-heading-xl">14 Birchwood Avenue, Manchester, M21 4EL</h1>
           </div>
-          <div class="govuk-grid-column-one-third" style="padding-top:20px">
-            <strong class="govuk-tag govuk-tag--red govuk-!-margin-right-2">Non-compliant</strong>
-            <strong class="govuk-tag govuk-tag--yellow govuk-!-margin-right-2">Overdue inspection</strong>
-            <strong class="govuk-tag govuk-tag--purple govuk-!-margin-top-2" style="display:inline-block">Active STAIRS request</strong>
+          
+          <div class="govuk-grid-column-one-third app-casefile-tags">
+            <div class="app-casefile-tags__wrapper">
+              <strong class="govuk-tag govuk-tag--red">Non-compliant</strong>
+              <strong class="govuk-tag govuk-tag--yellow">Overdue inspection</strong>
+              <strong class="govuk-tag govuk-tag--purple">Active STAIRS request</strong>
+            </div>
           </div>
         </div>
+        
+        <hr class="app-section-divider">
 
         <div class="govuk-tabs" data-module="govuk-tabs">
           <h2 class="govuk-tabs__title">Property information</h2>
@@ -877,7 +877,8 @@
           </div>
         </div>
       </div>
-
+</main>
+</div>
 
 
   <!-- ═══ FOOTER ════════════════════════════════════ -->
@@ -1116,11 +1117,12 @@
 
         </tbody>
       </table>
-      <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('requests'); closeStairsRequestModal(); return false;">View all</button>  </div>
-
+<div style="display:flex; justify-content:flex-end;">
+  <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('requests'); closeStairsRequestModal(); return false;">View all</button>
+</div>
   </div>
 </div>
-
+</div>
 <!-- Compliance modal-->
 
 <!-- Properties requiring attention modal -->
@@ -1143,14 +1145,8 @@
         </thead>
 
         <tbody class="govuk-table__body">
-
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell">
-              <a class="govuk-link" href="#" onclick="showScreen('casefile'); closeComplianceModal(); return false;">
-                14 Birchwood Avenue, Manchester
-              </a>
-            </td>
-
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell">14 Birchwood Avenue, Manchester</td>
             <td class="govuk-table__cell">Gas safety certificate expired</td>
 
             <td class="govuk-table__cell">
@@ -1193,10 +1189,10 @@
         </tbody>
       </table>
 
-      <div class="govuk-button-group govuk-!-margin-top-4">
-        <a href="#" onclick="showScreen('compliance'); closeComplianceModal(); return false;" class="govuk-button govuk-!-margin-bottom-0">View all</a>
+        <div style="display:flex; justify-content:flex-end;">
+          <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('compliance'); closeComplianceModal(); return false;">View all</button>
+        </div>      
       </div>
-
     </div>
   </div>
 </div>
