@@ -114,9 +114,7 @@
           </div>
 
           <div class="app-urgent-alert__actions">
-            <a href="#" onclick="showScreen('request-detail');return false;" class="app-urgent-alert__button">
-              Review
-            </a>
+          <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('request-detail'); return false;">Review</button>
           </div>
         </div>
         <hr class="app-section-divider">   
@@ -130,8 +128,6 @@
     <div class="app-stat-card app-stat-card--red">
 
       <div class="app-stat-card__content">
-
-         <img src="images/warning-icon.png" alt="Warning">
 
         <div class="app-stat-card__label">
           Non-compliant properties
@@ -156,8 +152,6 @@
 
       <div class="app-stat-card__content">
 
-         <img src="images/overdue-icon.png" alt="Overdue">
-
         <div class="app-stat-card__label">
           Overdue inspections
         </div>
@@ -180,9 +174,6 @@
     <div class="app-stat-card app-stat-card--yellow">
 
       <div class="app-stat-card__content">
-
-         <img src="images/request-icon.png" alt="Requests">
-
 
         <div class="app-stat-card__label">
           Active STAIRS requests
@@ -207,7 +198,6 @@
 
       <div class="app-stat-card__content">
 
-         <img src="images/compliance-icon.png" alt="Compliance">
 
         <div class="app-stat-card__label">
           Portfolio compliance rate
@@ -235,8 +225,8 @@
       <div class="card-body">
         <h5 class="card-title">Active STAIRS Requests</h5>
         <p class="card-text">Click the button below to view the active STAIRS requests. You can quick view a number or view all.</p>
-        <button type="button" onclick="openStairsRequestModal()" class="btn btn-primary">Quick view</button>
-        <a href="#" onclick="showScreen('requests');return false;" class="btn btn-primary">View all</a>
+        <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="openStairsRequestModal()">Quick view</button>
+        <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('requests'); return false;">View all</button>
       </div>
     </div>
   </div>
@@ -246,8 +236,8 @@
       <div class="card-body">
         <h5 class="card-title">Properties requiring attention</h5>
         <p class="card-text">Click the button below to view properties requiring attention. You can quick view a number or view all.</p>
-        <button type="button" onclick="openComplianceModal()" class="btn btn-primary">Quick view</button>
-        <a href="#" onclick="showScreen('compliance');return false;" class="btn btn-primary">View all</a>
+        <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="openComplianceModal()">Quick view</button>
+        <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('compliance'); return false;">View all</button>
       </div>
     </div>
   </div>
@@ -522,12 +512,7 @@
 
       7 properties are currently non-compliant and require action.
 
-      <a href="#"
-         onclick="openNonCompliantModal(); return false;"
-         class="app-urgent-alert__button">
-        Review properties
-      </a>
-
+      <button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="openNonCompliantModal(); return false;">Review properties</button>   
     </div>
 
   </div>
@@ -1168,8 +1153,7 @@
 
         </tbody>
       </table>
-<a href="#" onclick="showScreen('requests'); closeStairsRequestModal(); return false;" class="btn btn-primary">View all</a>    
-  </div>
+      <button class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showScreen('requests'); closeStairsRequestModal(); return false;">View all</button>  </div>
 
   </div>
 </div>

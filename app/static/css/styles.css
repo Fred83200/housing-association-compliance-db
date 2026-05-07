@@ -515,10 +515,6 @@
 }
 
 .app-urgent-alert {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -528,27 +524,13 @@
   margin: 20px 0;
 
   background: #fff7bf;
-  border-left: 5px solid #d4351c;
   border-radius: 8px;
 
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.app-urgent-alert__content {
-  font-size: 0.95rem;
-}
-
-.app-urgent-alert__content a {
-  font-weight: 700;
-}
-
-.app-urgent-alert__actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .app-urgent-alert__button {
+  display: inline-block;
   background: #1d70b8;
   color: white;
   padding: 6px 12px;
@@ -562,12 +544,6 @@
   background: #003078;
 }
 
-.app-urgent-alert__close {
-  border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-}
 .app-stat-card {
   background: white;
   border-radius: 16px;
