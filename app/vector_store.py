@@ -29,6 +29,14 @@ class DocumentStore:
         self.metadata = []
         self.index = None
 
+    def initialise(self):
+        print("Initialising document store...")
+
+        self.load_documents()
+        self.build_index()
+
+        print("Document store ready.")
+
     def load_documents(self):
         for doc_path in DOCUMENTS_PATHS:
             for file in os.listdir(doc_path):
@@ -63,7 +71,8 @@ class DocumentStore:
         print("Vector index built successfully.")
 
     def search(self, query: str, k: int = 3):
-        _ensure_index()
+        if self.index is None:
+            raise RuntimeError("Vector store not initialised")
 
         query_embedding = np.array(
             [get_embedding(query)]
@@ -83,8 +92,3 @@ class DocumentStore:
 
 
 doc_store = DocumentStore()
-
-def _ensure_index():
-    if doc_store.index is None:
-        doc_store.load_documents()
-        doc_store.build_index()
