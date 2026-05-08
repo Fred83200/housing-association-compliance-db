@@ -461,6 +461,7 @@ body,
 }
 
 /* Results modal */
+/* Results modal */
 
 .results-modal,
 .table-modal {
@@ -474,10 +475,10 @@ body,
 .results-modal__content,
 .table-modal-content {
   background: white;
-  width: 80%;
-  max-width: 900px;
-  max-height: 80vh;
-  margin: 8vh auto;
+  width: 96vw;
+  max-width: 1700px;
+  max-height: 92vh;
+  margin: 3vh auto;
   border-radius: 12px;
   overflow: hidden;
 }
@@ -510,9 +511,23 @@ body,
 
 .results-modal__body,
 .table-modal-body {
-  padding: 20px;
-  overflow-x: auto;
-  max-height: 70vh;
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(92vh - 90px);
+}
+
+.results-modal__body .govuk-table,
+.table-modal-body .govuk-table {
+  width: 100%;
+  table-layout: auto;
+}
+
+.results-modal__body .govuk-table__cell,
+.results-modal__body .govuk-table__header,
+.table-modal-body .govuk-table__cell,
+.table-modal-body .govuk-table__header {
+  white-space: normal;
+  vertical-align: top;
 }
 
 /* Alerts & sections */
