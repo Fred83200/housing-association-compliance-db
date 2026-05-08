@@ -292,14 +292,15 @@
 
         <hr class="app-section-divider">  
 
-     <div class="govuk-radios govuk-radios--inline govuk-!-margin-bottom-4">
-      <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-all" name="stairs-filter" type="radio" checked onchange="filterStairsRequests('all')"><label class="govuk-label govuk-radios__label" for="filter-all">All</label></div>
-      <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-review" name="stairs-filter" type="radio" onchange="filterStairsRequests('In Review')"><label class="govuk-label govuk-radios__label" for="filter-review">In review</label></div>
-      <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-open" name="stairs-filter" type="radio" onchange="filterStairsRequests('Open')"><label class="govuk-label govuk-radios__label" for="filter-open">Open</label></div>
-      <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-closed" name="stairs-filter" type="radio" onchange="filterStairsRequests('Closed')"><label class="govuk-label govuk-radios__label" for="filter-closed">Closed</label></div>
-      <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-responded" name="stairs-filter" type="radio" onchange="filterStairsRequests('Responded')"><label class="govuk-label govuk-radios__label" for="filter-responded">Responded</label></div>
-
-    </div>
+ <div class="app-stairs-filters">
+  <div class="govuk-radios govuk-radios--inline govuk-!-margin-bottom-4">
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-all" name="stairs-filter" type="radio" checked onchange="filterStairsRequests('all')"><label class="govuk-label govuk-radios__label" for="filter-all">All</label></div>
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-review" name="stairs-filter" type="radio" onchange="filterStairsRequests('In Review')"><label class="govuk-label govuk-radios__label" for="filter-review">In review</label></div>
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-open" name="stairs-filter" type="radio" onchange="filterStairsRequests('Open')"><label class="govuk-label govuk-radios__label" for="filter-open">Open</label></div>
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-closed" name="stairs-filter" type="radio" onchange="filterStairsRequests('Closed')"><label class="govuk-label govuk-radios__label" for="filter-closed">Closed</label></div>
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-responded" name="stairs-filter" type="radio" onchange="filterStairsRequests('Responded')"><label class="govuk-label govuk-radios__label" for="filter-responded">Responded</label></div>
+  </div>
+</div>
         <table class="govuk-table">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
