@@ -64,7 +64,46 @@ class DocumentSearchRequest(BaseQuestionClassifier):
 
         return list(property_ids)
 
-    def generate_sql_query(self, where_clause: str = "TRUE") -> str:
+    def generate_where_clause(self) -> str:
+        prompt = f"""
+        You are generating a SQL WHERE clause for a PostgreSQL database to return information on these properties.
+
+        The Relevant Schema:
+        {self.get_schema_context()}
+
+        Rules:
+        - ONLY return the WHERE clause condition (NO 'WHERE' keyword)
+        - Use valid PostgreSQL syntax
+        - Use ILIKE for text matching
+        - Use % for partial matches
+        - Use correct column names EXACTLY as given
+        - DO NOT include SELECT, DROP, INSERT, UPDATE, DELETE
+        - DO NOT include comments (--)
+
+        If no filtering is needed, return:
+        TRUE
+
+        Examples:
+
+        Query: "non compliant properties in SW postcode"
+        Output:
+        postcode ILIKE 'SW%'
+
+        Query: "properties in London inspected after 2023"
+        Output:
+        city ILIKE '%London%' AND last_inspection_date > '2023-01-01'
+
+        """
+
+        print(prompt)
+
+        result = llm_generate_response([
+            {"role": "user", "content": prompt}
+        ])
+
+        return result.strip()
+
+    def generate_sql_query(self, where_clause) -> str:
         return f"""
             SELECT
                 property_id,
@@ -84,10 +123,24 @@ class DocumentSearchRequest(BaseQuestionClassifier):
 
         combined = "\n\n".join([d["text"][:500] for d in docs])
 
-        prompt = f"""
-        Extract any property IDs mentioned in the following text.
+        schema_info = self.get_schema_context()
 
-        Return ONLY a JSON list of integers.
+        prompt = f"""
+        Extract any possible identifiers mentioned in the following text for property information to use as a where clause to filter an SQL query. The schema of the properties table is provided.
+        
+        You are generating a SQL WHERE clause for a PostgreSQL database to return information on these properties.
+
+        Rules:
+        - ONLY return the WHERE clause condition (NO 'WHERE' keyword)
+        - Use valid PostgreSQL syntax
+        - Use ILIKE for text matching
+        - Use % for partial matches
+        - Use correct column names EXACTLY as given
+        - DO NOT include SELECT, DROP, INSERT, UPDATE, DELETE
+        - DO NOT include comments (--)
+        
+        Schema:
+        {schema_info}
 
         Text:
         {combined}
@@ -98,7 +151,7 @@ class DocumentSearchRequest(BaseQuestionClassifier):
         ])
 
         try:
-            return json.loads(result)
+            return result.strip()
         except:
             return []
 
@@ -106,31 +159,27 @@ class DocumentSearchRequest(BaseQuestionClassifier):
 
         docs = self.semantic_document_search(self.question)
 
-        raw_where = self.generate_where_clause()
-        where_clause = self.sanitize_where_clause(raw_where)
+        property_ids_where_clause = (self.extract_property_ids_llm(docs))
+
+        print(property_ids_where_clause)
+
+        where_clause = str(property_ids_where_clause)
 
         query = self.generate_sql_query(where_clause)
+
+        print(query)
+
         rows = self.run_query_and_get_rows(query)
 
-        property_ids = set(self.extract_property_ids(docs))
-        property_ids.update(self.extract_property_ids_llm(docs))
+        print(rows)
 
-        doc_linked_properties = []
-        for pid in property_ids:
-            prop = get_property_overview(pid)
-            if prop:
-                doc_linked_properties.append(prop)
-
-        all_properties = {p["property_id"]: p for p in (rows + doc_linked_properties)}
-        properties = list(all_properties.values())
-
-        answer = self.summarise_documents(self.question, docs, properties)
+        answer = self.summarise_documents(self.question, docs, rows)
 
         return {
             "intent": self.intent,
             "answer": answer,
             "data": {
                 "documents": docs,
-                "properties": properties
+                "properties": rows
             },
         }

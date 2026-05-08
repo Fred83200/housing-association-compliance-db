@@ -71,6 +71,8 @@ def classify_intent(user_query: str) -> str:
                 - overdue_foi_requests (If they specifically ask for overdue foi requests)
                 - property_case_file (If they specifically ask for property case files)
                 
+                Again if you cannot classify the intent, default to a document search intent.
+                
                                     
                 Return ONLY JSON:
                 {{
@@ -139,7 +141,7 @@ def answer_question(question: str) -> dict:
     ai_intent = classify_intent(normalized_question)
     intent = ai_intent
 
-    print("PARSED INTENT:", ai_intent)
+    print("PARSED AI INTENT:", ai_intent)
 
     # Fallback to keyword counting if AI search doesn't retrieve anything
 

@@ -7,12 +7,17 @@ from app.discovery_service import (
     get_dashboard_summary,
     get_properties_requiring_attention,
 )
+from app.vector_store import doc_store
 
 app = FastAPI(
     title="Housing Compliance Discovery API",
     description="Local discovery API for PostgreSQL housing association demo data.",
     version="0.1.0",
 )
+
+@app.on_event("startup")
+def startup_event():
+    doc_store.initialise()
 
 
 class QuestionRequest(BaseModel):
