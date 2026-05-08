@@ -299,6 +299,7 @@
     <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-open" name="stairs-filter" type="radio" onchange="filterStairsRequests('Open')"><label class="govuk-label govuk-radios__label" for="filter-open">Open</label></div>
     <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-closed" name="stairs-filter" type="radio" onchange="filterStairsRequests('Closed')"><label class="govuk-label govuk-radios__label" for="filter-closed">Closed</label></div>
     <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-responded" name="stairs-filter" type="radio" onchange="filterStairsRequests('Responded')"><label class="govuk-label govuk-radios__label" for="filter-responded">Responded</label></div>
+    <div class="govuk-radios__item"><input class="govuk-radios__input" id="filter-released" name="stairs-filter" type="radio" onchange="filterStairsRequests('Released')"><label class="govuk-label govuk-radios__label" for="filter-released">Released</label></div>
   </div>
 </div>
         <table class="govuk-table">
@@ -519,82 +520,21 @@
 
         <hr class="app-section-divider">  
 
-        <table class="govuk-table">
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th class="govuk-table__header" scope="col">UPRN</th>
-              <th class="govuk-table__header" scope="col">Address</th>
-              <th class="govuk-table__header" scope="col">Compliance issue</th>
-              <th class="govuk-table__header" scope="col">Last inspection</th>
-              <th class="govuk-table__header" scope="col">Days overdue</th>
-              <th class="govuk-table__header" scope="col">Status</th>
-              <th class="govuk-table__header" scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234568</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#" onclick="showCaseFile(4);return false;">14 Birchwood Ave, Manchester</a></td>
-              <td class="govuk-table__cell">Gas safety certificate expired</td>
-              <td class="govuk-table__cell">Nov 2023</td>
-              <td class="govuk-table__cell app-deadline--urgent">547</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>              </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234581</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">8 Maple Court, Salford</a></td>
-              <td class="govuk-table__cell">Fire alarm inspection overdue</td>
-              <td class="govuk-table__cell">Feb 2024</td>
-              <td class="govuk-table__cell app-deadline--urgent">426</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234595</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">19 Primrose Way, Bolton</a></td>
-              <td class="govuk-table__cell">Gas safety certificate expired</td>
-              <td class="govuk-table__cell">Dec 2023</td>
-              <td class="govuk-table__cell app-deadline--urgent">517</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234602</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">4 Thornton Gardens, Bury</a></td>
-              <td class="govuk-table__cell">Legionella risk assessment overdue</td>
-              <td class="govuk-table__cell">Oct 2023</td>
-              <td class="govuk-table__cell app-deadline--urgent">578</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234614</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">31 Laburnum Drive, Wigan</a></td>
-              <td class="govuk-table__cell">EPC rating below E</td>
-              <td class="govuk-table__cell">Jan 2024</td>
-              <td class="govuk-table__cell app-deadline--soon">365</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234628</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">6 Cedar Close, Stockport</a></td>
-              <td class="govuk-table__cell">Gas safety certificate expired</td>
-              <td class="govuk-table__cell">Mar 2024</td>
-              <td class="govuk-table__cell app-deadline--soon">365</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--red">Non-compliant</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>
-            </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="font-family:monospace">10091234637</td>
-              <td class="govuk-table__cell"><a class="govuk-link" href="#">2 Ash Lane, Rochdale</a></td>
-              <td class="govuk-table__cell">Damp &amp; mould assessment overdue</td>
-              <td class="govuk-table__cell">Feb 2024</td>
-              <td class="govuk-table__cell app-deadline--soon">365</td>
-              <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--yellow">At risk</strong></td>
-              <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button" onclick="showCaseFile(4); return false;">View file</button></td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="govuk-table">
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">UPRN</th>
+                <th class="govuk-table__header" scope="col">Address</th>
+                <th class="govuk-table__header" scope="col">Compliance issue</th>
+                <th class="govuk-table__header" scope="col">Last inspection</th>
+                <th class="govuk-table__header" scope="col">Days overdue</th>
+                <th class="govuk-table__header" scope="col">Status</th>
+                <th class="govuk-table__header" scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body" id="tbody-compliance-properties"></tbody>
+          </table>
+
       </div>
 
     <!-- ─── PROPERTY CASE FILE ───────────────────── -->
@@ -1327,16 +1267,22 @@
 
     function statusTag(status) {
       const colours = {
-        'Open':        'govuk-tag--blue',
-        'In Review':   'govuk-tag--purple',
-        'Redacting':   'govuk-tag--yellow',
-        'Responded':   'govuk-tag--green',
-        'Closed':      'govuk-tag--grey',
-        'In review':   'govuk-tag--purple',
-        'Discovering': 'govuk-tag--light-blue',
-        'Released':    'govuk-tag--green',
+        'Open': 'govuk-tag--blue',
+        'In Review': 'govuk-tag--purple',
+        'Redacting': 'govuk-tag--yellow',
+        'Responded': 'govuk-tag--green',
+        'Closed': 'govuk-tag--grey',
+        'Released': 'govuk-tag--green',
+
+        'Non-compliant': 'govuk-tag--red',
+        'Non-Compliant': 'govuk-tag--red',
+
+        'At risk': 'govuk-tag--yellow',
+        'Compliant': 'govuk-tag--green'
       };
+
       const cls = colours[status] || 'govuk-tag--blue';
+
       return `<strong class="govuk-tag ${cls}">${status}</strong>`;
     }
 
@@ -1441,10 +1387,27 @@
     filteredRequests.map(buildRequestsRow).join('');
 }
 
-function filterStairsRequests(status) {
-  currentStairsFilter = status;
-  renderStairsRequestsTable();
-}
+    function filterStairsRequests(status) {
+      currentStairsFilter = status;
+
+      const reqTbody = document.getElementById('tbody-requests-stairs');
+
+      if (!reqTbody) return;
+
+      let filteredRequests = allStairsRequests;
+
+      if (status !== 'all') {
+        filteredRequests = allStairsRequests.filter(r => {
+          const currentStatus =
+            requestStatusByReference[r.request_reference] || r.status;
+
+          return currentStatus === status;
+        });
+      }
+
+      reqTbody.innerHTML =
+        filteredRequests.map(buildRequestsRow).join('');
+    }
 
     async function loadStairsRequests() {
       try {
@@ -1484,6 +1447,8 @@ function filterStairsRequests(status) {
     document.addEventListener('DOMContentLoaded', () => {
       loadDashboardSummary();
       loadStairsRequests();
+      loadComplianceProperties();
+
     });
 
     // ── Case file Overview tab ─────────────────────
@@ -1708,6 +1673,8 @@ function filterStairsRequests(status) {
         }
 
       requestStatusByReference[currentRequest.request_reference] = 'Released';
+      currentRequest.status = 'Released';
+      currentRequest.response_date = new Date().toISOString().split('T')[0];
 
       downloadResponsePdf(currentRequest);
       updateCaseFileFoiStatus(currentRequest.request_reference, 'Released');
@@ -1815,6 +1782,48 @@ function filterStairsRequests(status) {
 
       doc.save(`${request.request_reference}-response.pdf`);
     }
+
+        function calculateDaysOverdue(lastInspectionDate) {
+      if (!lastInspectionDate) return '—';
+
+      const inspection = new Date(lastInspectionDate);
+      const today = new Date();
+
+      inspection.setHours(0,0,0,0);
+      today.setHours(0,0,0,0);
+
+      const diffTime = today - inspection;
+
+      const diffDays = Math.floor(
+        diffTime / (1000 * 60 * 60 * 24)
+      );
+
+      return diffDays > 0 ? diffDays : 0;
+    }
+
+    function buildComplianceRow(p) {
+  return `<tr class="govuk-table__row">
+    <td class="govuk-table__cell" style="font-family:monospace">${p.uprn}</td>
+    <td class="govuk-table__cell">${p.address_line_1}, ${p.city}</td>
+    <td class="govuk-table__cell">${p.compliance_issue || 'Requires attention'}</td>
+    <td class="govuk-table__cell">${fmtDate(p.last_inspection_date)}</td>
+    <td class="govuk-table__cell app-deadline--urgent">
+      ${calculateDaysOverdue(p.last_inspection_date)}
+    </td>
+    <td class="govuk-table__cell">${statusTag(p.compliance_status)}</td>
+    <td class="govuk-table__cell"><button class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" onclick="showCaseFile(${p.property_id}); return false;">View file</button></td>
+  </tr>`;
+}
+
+async function loadComplianceProperties() {
+  const res = await fetch('/properties-requiring-attention');
+  if (!res.ok) return;
+
+  const properties = await res.json();
+  const tbody = document.getElementById('tbody-compliance-properties');
+
+  if (tbody) tbody.innerHTML = properties.map(buildComplianceRow).join('');
+}
 
     function setText(id, value) {
       const element = document.getElementById(id);

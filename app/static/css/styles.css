@@ -614,7 +614,15 @@ body,
 .app-stairs-filters .govuk-radios__input {
   transform: scale(0.85);
 }
+.app-stairs-filters .govuk-radios--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
 
+.app-stairs-filters .govuk-radios__item {
+  margin-right: 0;
+}
 /* Small buttons */
 
 .table-modal .govuk-button--small {
