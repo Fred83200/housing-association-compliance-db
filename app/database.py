@@ -8,13 +8,20 @@ load_dotenv()
 
 
 def get_connection():
-    return psycopg2.connect(
+    params = dict(
         dbname=os.getenv("DATABASE_NAME", "housing_compliance_demo"),
-        user=os.getenv("DATABASE_USER", "fred"),
+        user=os.getenv("DATABASE_USER"),
         host=os.getenv("DATABASE_HOST", "localhost"),
         port=os.getenv("DATABASE_PORT", "5432"),
         cursor_factory=RealDictCursor,
     )
+    password = os.getenv("DATABASE_PASSWORD")
+    if password:
+        params["password"] = password
+    ssl_mode = os.getenv("DATABASE_SSL")
+    if ssl_mode:
+        params["sslmode"] = ssl_mode
+    return psycopg2.connect(**params)
 
 
 @contextmanager
