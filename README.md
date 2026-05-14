@@ -487,7 +487,7 @@ This simulates a real AI Foundry "case file" retrieval scenario
 
 ## Azure Deployment
 
-The app can run against live Azure services instead of local equivalents. Copy `.env.example` to `.env` and populate it:
+The app can run against live Azure services instead of local equivalents. Copy `.env.example` to `.env` and populate the non-secret values:
 
 ```bash
 cp .env.example .env
@@ -499,15 +499,11 @@ Get values from the Terraform outputs (run from `stairs-response-agent/terraform
 terraform output foundry_endpoint   # → AZURE_OPENAI_ENDPOINT
 terraform output postgresql_fqdn    # → DATABASE_HOST
 terraform output search_endpoint    # → SEARCH_ENDPOINT
+terraform output key_vault_uri      # → AZURE_KEYVAULT_URI
 ```
 
-Get secrets from Key Vault:
+**Secrets are fetched from Key Vault at runtime** — no need to set `DATABASE_PASSWORD`, `AZURE_OPENAI_API_KEY`, or `SEARCH_API_KEY` in `.env` when `AZURE_KEYVAULT_URI` is set. The app uses `DefaultAzureCredential` (`az login` locally, managed identity in the Container App) to read `postgresql-password`, `openai-api-key`, and `search-api-key` from Key Vault.
 
-```bash
-az keyvault secret show --vault-name kv-cmplianz-hack --name openai-api-key --query value -o tsv
-az keyvault secret show --vault-name kv-cmplianz-hack --name search-api-key --query value -o tsv
-```
-
-Set `DATABASE_SSL=require` and `DATABASE_PASSWORD` when connecting to Azure PostgreSQL.
+For local dev without Key Vault access, set the fallback env vars directly in `.env` (see commented lines in `.env.example`).
 
 To deploy as a container to Azure Container Apps, see `stairs-response-agent/README.md`.
