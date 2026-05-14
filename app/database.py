@@ -15,8 +15,10 @@ def get_connection():
         port=os.getenv("DATABASE_PORT", "5432"),
         cursor_factory=RealDictCursor,
     )
-    password = os.getenv("DATABASE_PASSWORD")
-    if password:
+    if os.getenv("AZURE_KEYVAULT_URI"):
+        from app.key_vault import get_secret
+        params["password"] = get_secret("postgresql-password")
+    elif password := os.getenv("DATABASE_PASSWORD"):
         params["password"] = password
     ssl_mode = os.getenv("DATABASE_SSL")
     if ssl_mode:

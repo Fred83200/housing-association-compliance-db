@@ -8,3 +8,4 @@ openai>=1.40.0
 numpy
 azure-search-documents>=11.4.0
 azure-identity>=1.15.0
+azure-keyvault-secrets>=4.7.0

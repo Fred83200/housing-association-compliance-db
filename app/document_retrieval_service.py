@@ -15,9 +15,15 @@ def _get_client() -> SearchClient:
     global _client
     if _client is None:
         endpoint = os.getenv("SEARCH_ENDPOINT")
-        api_key = os.getenv("SEARCH_API_KEY")
-        if not endpoint or not api_key:
-            raise RuntimeError("SEARCH_ENDPOINT and SEARCH_API_KEY must be set")
+        if not endpoint:
+            raise RuntimeError("SEARCH_ENDPOINT must be set")
+        if os.getenv("AZURE_KEYVAULT_URI"):
+            from app.key_vault import get_secret
+            api_key = get_secret("search-api-key")
+        else:
+            api_key = os.getenv("SEARCH_API_KEY")
+            if not api_key:
+                raise RuntimeError("SEARCH_API_KEY must be set")
         _client = SearchClient(
             endpoint=endpoint,
             index_name=INDEX_NAME,
