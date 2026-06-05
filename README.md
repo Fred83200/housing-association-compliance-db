@@ -137,6 +137,8 @@ DATABASE_PORT=5432
 
 ### 5. Create the database
 
+Note: If you have a fresh install of Postgres SQL, you *may* need to add an extra `-U postgres` argument to each SQL command, with default password `password`
+
 ```bash
 psql postgres
 CREATE DATABASE housing_compliance_demo;
