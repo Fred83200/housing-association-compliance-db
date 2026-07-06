@@ -520,3 +520,7 @@ Run `sh deploy_acr.sh` in the project root to build the docker image and deploy 
 ## Binding the image to the container app
 
 Run `sh deploy.sh` in the project root to build and deploy the image to the container registry and container app
+
+## Verifying connectivity
+
+Copy the `Application Url` and run `curl -X GET <APPLICATION_URL>/health` to verify that the container app is ok and running
