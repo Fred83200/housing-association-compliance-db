@@ -509,3 +509,14 @@ terraform output key_vault_uri      # → AZURE_KEYVAULT_URI
 For local dev without Key Vault access, set the fallback env vars directly in `.env` (see commented lines in `.env.example`).
 
 To deploy as a container to Azure Container Apps, see `stairs-response-agent/README.md`.
+
+
+# Deployment
+
+## Deploying to the container registry
+
+Run `sh deploy_acr.sh` in the project root to build the docker image and deploy to the container registry
+
+## Binding the image to the container app
+
+Run `sh deploy.sh` in the project root to build and deploy the image to the container registry and container app

@@ -6,6 +6,7 @@ set -a
 source .env
 set +a
 
+echo "Building the image..."
 
 IMAGE_NAME=compliance-api:latest
 az acr login --name $ACR_NAME
@@ -15,5 +16,7 @@ HEAD_COMMIT_ID=$(git rev-parse --short HEAD)
 docker build --platform linux/amd64 -t $IMAGE_NAME .
 
 docker tag $IMAGE_NAME $ACR_NAME.azurecr.io/$IMAGE_NAME
+
+echo "Pushing the image to the container registry..."
 
 docker push $ACR_NAME.azurecr.io/$IMAGE_NAME
